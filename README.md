@@ -1,5 +1,7 @@
 # Terraform Provider StatusPage
 
+![release](https://github.com/sbecker59/terraform-provider-statuspage/workflows/release/badge.svg)
+
 Run the following command to build the provider
 
 ```shell
