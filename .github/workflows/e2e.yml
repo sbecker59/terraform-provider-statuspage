@@ -35,7 +35,6 @@ jobs:
           make docs
           git config user.name github-actions
           git config user.email github-actions@github.com
-          ls -a $GITHUB_WORKSPACE
           git add $GITHUB_WORKSPACE/docs/*
           git diff-index --quiet HEAD || git commit -am "docs(): Auto generated terraform docs"
           git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git" HEAD:${INPUT_BRANCH}
