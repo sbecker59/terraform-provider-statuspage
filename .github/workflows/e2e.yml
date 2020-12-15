@@ -31,4 +31,10 @@ jobs:
           unzip tfplugindocs_0.2.0_linux_amd64.zip
           echo $(pwd) >> $GITHUB_PATH
       - name: Run docs gen
-        run: make docs
+        run: | 
+          make docs
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "docs(): Auto generated terraform docs"
+          git push
