@@ -7,6 +7,4 @@ terraform {
     }
 }
 
-provider "statuspage" {
-    api_key = "da27995a-08ff-4c2a-b513-65b0eecf0e1a"
-}
+provider "statuspage" {}
