@@ -39,3 +39,4 @@ jobs:
           if git status | grep -q modified
             git commit -m "docs(): Auto generated terraform docs"
             git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git" HEAD:${INPUT_BRANCH}
+          fi
