@@ -36,5 +36,6 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add $GITHUB_WORKSPACE/docs/*
-          git commit -m "docs(): Auto generated terraform docs"
-          git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git" HEAD:${INPUT_BRANCH}
+          if git status | grep -q modified
+            git commit -m "docs(): Auto generated terraform docs"
+            git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git" HEAD:${INPUT_BRANCH}
