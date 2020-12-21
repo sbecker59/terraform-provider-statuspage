@@ -83,13 +83,15 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Printf("[INFO] Update Status Page metric providers '%s'", t)
-	_, _, err := statuspageClientV1.MetricProvidersApi.PatchPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id(), p)
+	result, _, err := statuspageClientV1.MetricProvidersApi.PatchPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id(), p)
 
 	if err != nil {
 		return translateClientError(err, "failed to update metric providers using Status Page API")
 	}
 
-	return nil
+	d.SetId(result.Id)
+
+	return resourceMetricProviderRead(d, m)
 }
 
 func resourceMetricProviderDelete(d *schema.ResourceData, m interface{}) error {

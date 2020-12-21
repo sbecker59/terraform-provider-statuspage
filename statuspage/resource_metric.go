@@ -39,11 +39,11 @@ func resourceMetricCreate(d *schema.ResourceData, m interface{}) error {
 		},
 	}
 
-	log.Printf("[INFO] Creating Status Page metric providers '%s'", t)
+	log.Printf("[INFO] Creating Status Page metric '%s'", name)
 	result, _, err := statuspageClientV1.MetricsApi.PostPagesPageIdMetricsProvidersMetricsProviderIdMetrics(authV1, d.Get("page_id").(string), d.Get("metric_provider_id").(string), p)
 
 	if err != nil {
-		return translateClientError(err, "failed to create metric providers using Status Page API")
+		return translateClientError(err, "failed to create metric using Status Page API")
 	}
 
 	d.SetId(result.Id)
@@ -81,38 +81,24 @@ func resourceMetricUpdate(d *schema.ResourceData, m interface{}) error {
 
 	name := d.Get("name").(string)
 	metricIdentifier := d.Get("metric_identifier").(string)
-	transform := d.Get("transform").(string)
-	suffix := d.Get("suffix").(string)
-	yAxisMin := d.Get("y_axis_min").(int32)
-	yAxisMax := d.Get("y_axis_max").(int32)
-	yAxisHidden := d.Get("y_axis_hidden").(bool)
-	display := d.Get("display").(bool)
-	decimalPlaces := d.Get("decimal_places").(int32)
-	tooltipDescription := d.Get("tooltip_description").(string)
 
-	p := sp.PutPagesPageIdMetrics{
+	p := sp.PatchPagesPageIdMetrics{
 		Metric: &sp.PatchPagesPageIdMetricsMetric{
-			Name:               name,
-			MetricIdentifier:   metricIdentifier,
-			Transform:          transform,
-			Suffix:             suffix,
-			YAxisMin:           yAxisMin,
-			YAxisMax:           yAxisMax,
-			YAxisHidden:        yAxisHidden,
-			Display:            display,
-			DecimalPlaces:      decimalPlaces,
-			TooltipDescription: tooltipDescription,
+			Name:             name,
+			MetricIdentifier: metricIdentifier,
 		},
 	}
 
-	log.Printf("[INFO] Update Status Page metric providers '%s'", t)
-	_, _, err := statuspageClientV1.MetricsApi.PatchPagesPageIdMetricsMetricId(authV1, d.Get("page_id").(string), d.Id(), p)
+	log.Printf("[INFO] Update Status Page metric '%s'", name)
+	result, _, err := statuspageClientV1.MetricsApi.PatchPagesPageIdMetricsMetricId(authV1, d.Get("page_id").(string), d.Id(), p)
 
 	if err != nil {
-		return translateClientError(err, "failed to update metric providers using Status Page API")
+		return translateClientError(err, "failed to update metric using Status Page API")
 	}
 
-	return nil
+	d.SetId(result.Id)
+
+	return resourceMetricRead(d, m)
 }
 
 func resourceMetricDelete(d *schema.ResourceData, m interface{}) error {

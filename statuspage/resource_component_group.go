@@ -1,6 +1,7 @@
 package statuspage
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,6 +20,12 @@ func resourceComponentGroupRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return translateClientError(err, "failed to get component groups using Status Page API")
 	}
+
+	if &componentGroups == nil {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("description", componentGroups.Description)
 	d.Set("name", componentGroups.Name)
 	d.Set("components", componentGroups.Components)
@@ -35,17 +42,17 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
 
-	tfComponents := d.Get("components").(*schema.Set).List()
-	components := make([]string, len(tfComponents))
-	for i, tfComponent := range tfComponents {
-		components[i] = tfComponent.(string)
+	components := d.Get("components").([]interface{})
+	c := make([]string, len(components))
+	for i, v := range components {
+		c[i] = fmt.Sprint(v)
 	}
 
 	p := sp.PostPagesPageIdComponentGroups{
 		Description: description,
 		ComponentGroup: &sp.PostPagesPageIdComponentGroupsComponentGroup{
 			Name:       name,
-			Components: components,
+			Components: c,
 		},
 	}
 
@@ -71,28 +78,30 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
 
-	tfComponents := d.Get("components").(*schema.Set).List()
-	components := make([]string, len(tfComponents))
-	for i, tfComponent := range tfComponents {
-		components[i] = tfComponent.(string)
+	components := d.Get("components").([]interface{})
+	c := make([]string, len(components))
+	for i, v := range components {
+		c[i] = fmt.Sprint(v)
 	}
 
 	p := sp.PatchPagesPageIdComponentGroups{
 		Description: description,
 		ComponentGroup: &sp.PostPagesPageIdComponentGroupsComponentGroup{
 			Name:       name,
-			Components: components,
+			Components: c,
 		},
 	}
 
 	log.Printf("[INFO] Update Status Page componant group '%s'", name)
-	_, _, err := statuspageClientV1.ComponentGroupsApi.PatchPagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id(), p)
+	result, _, err := statuspageClientV1.ComponentGroupsApi.PatchPagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id(), p)
 
 	if err != nil {
 		return translateClientError(err, "failed to update component group using Status Page API")
 	}
 
-	return nil
+	d.SetId(result.Id)
+
+	return resourceComponentGroupRead(d, m)
 }
 
 func resourceComponentGroupDelete(d *schema.ResourceData, m interface{}) error {
@@ -133,11 +142,12 @@ func resourceComponentGroup() *schema.Resource {
 				Optional:    true,
 			},
 			"components": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Description: "An array with the IDs of the components in this group",
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Set:         schema.HashString,
 				Required:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
