@@ -22,6 +22,12 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 		return translateClientError(err, "failed to get component using Status Page API")
 	}
 
+	if &component == nil {
+		log.Printf("[INFO] Statuspage could not find component with ID: %s\n", d.Id())
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("description", component.Description)
 	d.Set("start_date", component.StartDate)
 	d.Set("name", component.Name)
@@ -94,13 +100,15 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Printf("[INFO] Update Status Page componant '%s'", name)
-	_, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id(), p)
+	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id(), p)
 
 	if err != nil {
 		return translateClientError(err, "failed to update component using Status Page API")
 	}
 
-	return nil
+	d.SetId(result.Id)
+
+	return resourceComponentRead(d, m)
 }
 
 func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
