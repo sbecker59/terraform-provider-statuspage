@@ -61,9 +61,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	authV1 := context.WithValue(
 		context.Background(),
-		sp.ContextAPIKey,
-		sp.APIKey{
-			Key: "OAuth " + apiKey,
+		sp.ContextAPIKeys,
+		map[string]sp.APIKey{
+			"api_key": {
+				Key:    apiKey,
+				Prefix: "oauth",
+			},
 		},
 	)
 

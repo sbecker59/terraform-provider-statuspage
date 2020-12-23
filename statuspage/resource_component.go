@@ -15,10 +15,10 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 
 	name := d.Get("name").(string)
-	log.Printf("[INFO] Reading OpsGenie component '%s'", name)
+	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
-	component, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id())
-	if err != nil {
+	component, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	if err.Error() != "" {
 		return translateClientError(err, "failed to get component using Status Page API")
 	}
 
@@ -28,12 +28,11 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	d.Set("description", component.Description)
-	d.Set("start_date", component.StartDate)
-	d.Set("name", component.Name)
-	d.Set("only_show_if_degraded", component.OnlyShowIfDegraded)
-	d.Set("showcase", component.Showcase)
-	d.Set("status", component.Status)
+	d.Set("description", component.GetDescription())
+	d.Set("name", component.GetName())
+	d.Set("only_show_if_degraded", component.GetOnlyShowIfDegraded())
+	d.Set("showcase", component.GetShowcase())
+	d.Set("status", component.GetStatus())
 
 	return nil
 }
@@ -49,27 +48,29 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 	description := d.Get("description").(string)
 	showcase := d.Get("showcase").(bool)
 	onlyShowIfDegraded := d.Get("only_show_if_degraded").(bool)
-	startDate := d.Get("start_date").(string)
 
-	p := sp.PostPagesPageIdComponents{
-		Component: &sp.PostPagesPageIdComponentsComponent{
-			Name:               name,
-			Description:        description,
-			Status:             status,
-			OnlyShowIfDegraded: onlyShowIfDegraded,
-			Showcase:           showcase,
-			StartDate:          startDate,
-		},
+	var component sp.PostPagesPageIdComponentsComponent
+
+	component.SetName(name)
+	component.SetDescription(description)
+	component.SetStatus(status)
+	component.SetOnlyShowIfDegraded(onlyShowIfDegraded)
+	component.SetShowcase(showcase)
+	if r, ok := d.GetOk("start_date"); ok {
+		component.SetStartDate(r.(string))
 	}
 
-	log.Printf("[INFO] Creating Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string), p)
+	o := *sp.NewPostPagesPageIdComponents()
+	o.SetComponent(component)
 
-	if err != nil {
+	log.Printf("[INFO] Creating Status Page componant '%s'", name)
+	result, _, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
+
+	if err.Error() != "" {
 		return translateClientError(err, "failed to create component using Status Page API")
 	}
 
-	d.SetId(result.Id)
+	d.SetId(result.GetId())
 
 	return resourceComponentRead(d, m)
 
@@ -86,27 +87,29 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	description := d.Get("description").(string)
 	showcase := d.Get("showcase").(bool)
 	onlyShowIfDegraded := d.Get("only_show_if_degraded").(bool)
-	startDate := d.Get("start_date").(string)
 
-	p := sp.PatchPagesPageIdComponents{
-		Component: &sp.PostPagesPageIdComponentsComponent{
-			Name:               name,
-			Description:        description,
-			Status:             status,
-			OnlyShowIfDegraded: onlyShowIfDegraded,
-			Showcase:           showcase,
-			StartDate:          startDate,
-		},
+	var component sp.PostPagesPageIdComponentsComponent
+
+	component.SetName(name)
+	component.SetDescription(description)
+	component.SetStatus(status)
+	component.SetOnlyShowIfDegraded(onlyShowIfDegraded)
+	component.SetShowcase(showcase)
+	if r, ok := d.GetOk("start_date"); ok {
+		component.SetStartDate(r.(string))
 	}
 
-	log.Printf("[INFO] Update Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id(), p)
+	o := *sp.NewPatchPagesPageIdComponents()
+	o.SetComponent(component)
 
-	if err != nil {
+	log.Printf("[INFO] Update Status Page componant '%s'", name)
+	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
+
+	if err.Error() != "" {
 		return translateClientError(err, "failed to update component using Status Page API")
 	}
 
-	d.SetId(result.Id)
+	d.SetId(result.GetId())
 
 	return resourceComponentRead(d, m)
 }
@@ -116,9 +119,9 @@ func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id())
+	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err != nil {
+	if err.Error() != "" {
 		return translateClientError(err, "failed to delete component using Status Page API")
 	}
 
