@@ -23,6 +23,14 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.15.x
+
+      - name: Tests Acc
+        env:
+          SP_API_KEY: ${{ secrets.SP_API_KEY }}
+          STATUSPAGE_PAGE_ID: ${{ secrets.STATUSPAGE_PAGE_ID }}
+        run: |
+          make testacc
+
       - name: Install tfplugindocs
         run: |
           mkdir -p $GITHUB_WORKSPACE/bin
@@ -30,6 +38,7 @@ jobs:
           wget https://github.com/hashicorp/terraform-plugin-docs/releases/download/v0.2.0/tfplugindocs_0.2.0_linux_amd64.zip
           unzip tfplugindocs_0.2.0_linux_amd64.zip
           echo $(pwd) >> $GITHUB_PATH
+          
       - name: Run docs gen
         run: | 
           make docs
