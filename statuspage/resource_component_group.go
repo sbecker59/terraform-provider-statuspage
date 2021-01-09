@@ -42,7 +42,7 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
 
-	components := d.Get("components").([]interface{})
+	components := d.Get("components").(*schema.Set).List()
 	c := make([]string, len(components))
 	for i, v := range components {
 		c[i] = fmt.Sprint(v)
@@ -79,7 +79,7 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
 
-	components := d.Get("components").([]interface{})
+	components := d.Get("components").(*schema.Set).List()
 	c := make([]string, len(components))
 	for i, v := range components {
 		c[i] = fmt.Sprint(v)
@@ -144,9 +144,10 @@ func resourceComponentGroup() *schema.Resource {
 				Optional:    true,
 			},
 			"components": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Description: "An array with the IDs of the components in this group",
 				Required:    true,
+				Set:         schema.HashString,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

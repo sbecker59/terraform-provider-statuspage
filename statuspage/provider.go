@@ -32,6 +32,7 @@ func Provider() *schema.Provider {
 			"statuspage_incident":        resourceIncident(),
 			"statuspage_metric":          resourceMetric(),
 			"statuspage_metric_provider": resourceMetricProvider(),
+			"statuspage_subscriber":      resourceSubscriber(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{},
 		ConfigureFunc:  providerConfigure,

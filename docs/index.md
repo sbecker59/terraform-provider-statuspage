@@ -13,12 +13,11 @@ description: |-
 
 ```terraform
 terraform {
-    required_providers {
-        statuspage = {
-            version = "0.1.0"
-            source = "sbecker59/statuspage"
-        }
+  required_providers {
+    statuspage = {
+      source  = "sbecker59/statuspage"
     }
+  }
 }
 
 provider "statuspage" {}
