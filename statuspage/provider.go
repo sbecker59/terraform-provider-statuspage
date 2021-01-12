@@ -34,8 +34,10 @@ func Provider() *schema.Provider {
 			"statuspage_metric_provider": resourceMetricProvider(),
 			"statuspage_subscriber":      resourceSubscriber(),
 		},
-		DataSourcesMap: map[string]*schema.Resource{},
-		ConfigureFunc:  providerConfigure,
+		DataSourcesMap: map[string]*schema.Resource{
+			"statuspage_component_groups": dataSourceComponentGroups(),
+		},
+		ConfigureFunc: providerConfigure,
 	}
 
 	return statuspageProvider

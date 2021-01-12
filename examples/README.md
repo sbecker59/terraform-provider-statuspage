@@ -6,3 +6,5 @@ The document generation tool looks for files in the following locations by defau
 
 * **provider/provider.tf** example file for the provider index page
 * **resources/<full resource name>/main.tf** example file for the named data source page
+* **data-sources//data-source.tf** example file for the named data source page
+
