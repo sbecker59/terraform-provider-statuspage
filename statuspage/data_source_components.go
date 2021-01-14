@@ -7,10 +7,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func dataSourceComponentGroups() *schema.Resource {
+func dataSourceComponents() *schema.Resource {
 	return &schema.Resource{
 		Description: "",
-		Read:        dataSourceComponentGroupsRead,
+		Read:        dataSourceComponentsRead,
 
 		Schema: map[string]*schema.Schema{
 			"filter": dataSourceFiltersSchema(),
@@ -21,7 +21,7 @@ func dataSourceComponentGroups() *schema.Resource {
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			// Computed values
-			"component_groups": {
+			"components": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -47,12 +47,9 @@ func dataSourceComponentGroups() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"components": {
-							Type:     schema.TypeList,
+						"group_id": {
+							Type:     schema.TypeString,
 							Computed: true,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
 						},
 					},
 				},
@@ -61,40 +58,40 @@ func dataSourceComponentGroups() *schema.Resource {
 	}
 }
 
-func dataSourceComponentGroupsRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	res, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).Execute()
+	res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "error querying component group list")
+		return translateClientError(err, "error querying component list")
 	}
 
-	d.SetId(GenerateDataSourceHashID("DataSourceComponentGroups-", dataSourceComponentGroups(), d))
+	d.SetId(GenerateDataSourceHashID("DataSourceComponents-", dataSourceComponents(), d))
 	resources := []map[string]interface{}{}
 
 	for _, r := range res {
-		componentGroup := map[string]interface{}{}
+		component := map[string]interface{}{}
 		fmt.Errorf("%s", r.GetName())
 		if r.Name != nil {
-			componentGroup["id"] = r.GetId()
-			componentGroup["name"] = r.GetName()
-			componentGroup["description"] = r.GetDescription()
-			componentGroup["position"] = r.GetPosition()
-			componentGroup["components"] = r.GetComponents()
+			component["id"] = r.GetId()
+			component["name"] = r.GetName()
+			component["description"] = r.GetDescription()
+			component["position"] = r.GetPosition()
+			component["group_id"] = r.GetGroupId()
 		}
 
-		resources = append(resources, componentGroup)
+		resources = append(resources, component)
 	}
 
 	if f, fOk := d.GetOkExists("filter"); fOk {
-		resources = ApplyFilters(f.(*schema.Set), resources, dataSourceComponentGroups().Schema["component_groups"].Elem.(*schema.Resource).Schema)
+		resources = ApplyFilters(f.(*schema.Set), resources, dataSourceComponents().Schema["components"].Elem.(*schema.Resource).Schema)
 	}
 
-	if err := d.Set("component_groups", resources); err != nil {
+	if err := d.Set("components", resources); err != nil {
 		return err
 	}
 

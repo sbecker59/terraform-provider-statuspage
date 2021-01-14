@@ -1,18 +1,18 @@
 ---
-page_title: "statuspage_component_groups Data Source - terraform-provider-statuspage"
+page_title: "statuspage_components Data Source - terraform-provider-statuspage"
 subcategory: ""
 description: |-
   
 ---
 
-# Data Source `statuspage_component_groups`
+# Data Source `statuspage_components`
 
 
 
 ## Example Usage
 
 ```terraform
-data "statuspage_component_groups" "default" {
+data "statuspage_components" "default" {
     
     page_id = local.page_id
 
@@ -36,7 +36,7 @@ data "statuspage_component_groups" "default" {
 
 ### Read-only
 
-- **component_groups** (List of Object, Read-only) (see [below for nested schema](#nestedatt--component_groups))
+- **components** (List of Object, Read-only) (see [below for nested schema](#nestedatt--components))
 
 <a id="nestedblock--filter"></a>
 ### Nested Schema for `filter`
@@ -51,11 +51,11 @@ Optional:
 - **regex** (Boolean, Optional)
 
 
-<a id="nestedatt--component_groups"></a>
-### Nested Schema for `component_groups`
+<a id="nestedatt--components"></a>
+### Nested Schema for `components`
 
-- **components** (List of String)
 - **description** (String)
+- **group_id** (String)
 - **id** (String)
 - **name** (String)
 - **position** (Number)

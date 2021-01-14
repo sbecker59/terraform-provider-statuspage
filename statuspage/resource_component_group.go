@@ -3,6 +3,7 @@ package statuspage
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
@@ -120,12 +121,33 @@ func resourceComponentGroupDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
+func resourceComponentGroupImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+	if len(strings.Split(d.Id(), "/")) != 2 {
+		return []*schema.ResourceData{}, fmt.Errorf("[ERROR] Invalid resource format: %s. Please use 'page-id/component-group-id'", d.Id())
+	}
+
+	pageID := strings.Split(d.Id(), "/")[0]
+	componentGroupID := strings.Split(d.Id(), "/")[1]
+
+	log.Printf("[INFO] Importing Component Group %s from Page %s", componentGroupID, pageID)
+
+	d.Set("page_id", pageID)
+	d.SetId(componentGroupID)
+
+	err := resourceComponentGroupRead(d, m)
+
+	return []*schema.ResourceData{d}, err
+}
+
 func resourceComponentGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceComponentGroupCreate,
 		Read:   resourceComponentGroupRead,
 		Update: resourceComponentGroupUpdate,
 		Delete: resourceComponentGroupDelete,
+		Importer: &schema.ResourceImporter{
+			State: resourceComponentGroupImport,
+		},
 		Schema: map[string]*schema.Schema{
 			"page_id": {
 				Type:        schema.TypeString,
