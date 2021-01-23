@@ -1,8 +1,6 @@
 package statuspage
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -75,16 +73,17 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 
 	for _, r := range res {
 		component := map[string]interface{}{}
-		fmt.Errorf("%s", r.GetName())
-		if r.Name != nil {
+
+		if _, ok := r.GetNameOk(); ok && !r.GetGroup() {
 			component["id"] = r.GetId()
 			component["name"] = r.GetName()
 			component["description"] = r.GetDescription()
 			component["position"] = r.GetPosition()
 			component["group_id"] = r.GetGroupId()
+
+			resources = append(resources, component)
 		}
 
-		resources = append(resources, component)
 	}
 
 	if f, fOk := d.GetOkExists("filter"); fOk {
