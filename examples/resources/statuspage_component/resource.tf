@@ -3,4 +3,10 @@ resource "statuspage_component" "my_component" {
   name        = "My Website"
   description = "Status of my Website"
   status      = "operational"
+
+  lifecycle {
+      ignore_changes = [
+          status
+      ]
+  }
 }
