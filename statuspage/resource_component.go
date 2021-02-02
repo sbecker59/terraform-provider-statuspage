@@ -185,6 +185,7 @@ func resourceComponent() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "Should this component be shown component only if in degraded state",
 				Optional:    true,
+				Default:     true,
 			},
 			"only_show_if_degraded": {
 				Type:     schema.TypeBool,
