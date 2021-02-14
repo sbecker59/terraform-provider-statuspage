@@ -2,6 +2,7 @@
 # Terraform Provider StatusPage
 
 ![release](https://github.com/sbecker59/terraform-provider-statuspage/workflows/release/badge.svg)
+[![codecov](https://codecov.io/gh/sbecker59/terraform-provider-statuspage/branch/main/graph/badge.svg?token=OalDkaUlvu)](https://codecov.io/gh/sbecker59/terraform-provider-statuspage)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/sbecker59/terraform-provider-statuspage)
 
 Run the following command to build the provider
