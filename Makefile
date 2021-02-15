@@ -36,6 +36,10 @@ test:
 testacc: 
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 	
+
+cover:
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -coverprofile=coverage.txt -covermode=atomic ./...
+
 .PHONY: docs
 docs:
 	tfplugindocs generate

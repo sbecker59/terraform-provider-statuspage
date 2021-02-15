@@ -29,16 +29,9 @@ jobs:
           SP_API_KEY: ${{ secrets.SP_API_KEY }}
           STATUSPAGE_PAGE_ID: ${{ secrets.STATUSPAGE_PAGE_ID }}
         run: |
-          make testacc
+          make cover
 
-      - name: Install tfplugindocs
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/bin
-          cd $GITHUB_WORKSPACE/bin
-          wget https://github.com/hashicorp/terraform-plugin-docs/releases/download/v0.4.0/tfplugindocs_0.4.0_linux_amd64.zip
-          unzip tfplugindocs_0.4.0_linux_amd64.zip
-          echo $(pwd) >> $GITHUB_PATH
-          
-      - name: Run docs gen
-        run: | 
-          make docs
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
