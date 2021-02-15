@@ -1,8 +1,12 @@
 package statuspage
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -58,5 +62,63 @@ func buildStatuspageClientV1(httpclient *http.Client) *sp.APIClient {
 func TestProvider(t *testing.T) {
 	if err := Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
+	}
+}
+
+func TestUnittranslateClientError_MsgEmptyAndGenericError(t *testing.T) {
+	if err := translateClientError(errors.New(""), ""); err != nil {
+		if !strings.Contains(err.Error(), "an error occurred") {
+			t.Error("TestUnittranslateClientError_MsgEmptyAndGenericError")
+		}
+	}
+}
+
+func TestUnittranslateClientError_MsgAndGenericError(t *testing.T) {
+	if err := translateClientError(errors.New(""), ""); err != nil {
+		if !strings.Contains(err.Error(), "an error occurred") {
+			t.Error("TestUnittranslateClientError_MsgAndGenericError")
+		}
+	}
+}
+
+type GenericOpenAPIError struct {
+	body  []byte
+	error string
+	model interface{}
+}
+
+func (e GenericOpenAPIError) Error() string {
+	return e.error
+}
+
+func TestUnittranslateClientError_MsgAndGenericOpenAPIError(t *testing.T) {
+
+	genericOpenAPIError := GenericOpenAPIError{
+		body:  make([]byte, 128),
+		error: errors.New("GenericOpenAPIError").Error(),
+		model: nil,
+	}
+
+	if err := translateClientError(genericOpenAPIError, ""); err != nil {
+		fmt.Printf("%s", err)
+		if !strings.Contains(err.Error(), "an error occurred: GenericOpenAPIError") {
+			t.Error("TestUnittranslateClientError_MsgAndGenericOpenAPIError")
+		}
+	}
+}
+
+func TestUnittranslateClientError_MsgAndUrlError(t *testing.T) {
+
+	urlError := &url.Error{
+		Op:  "Op",
+		URL: "Url",
+		Err: errors.New("Err"),
+	}
+
+	if err := translateClientError(urlError, ""); err != nil {
+		fmt.Printf("%s", err)
+		if !strings.Contains(err.Error(), "an error occurred: (url.Error): Op") && !strings.Contains(err.Error(), "Url") && !strings.Contains(err.Error(), "Err") {
+			t.Error("TestUnittranslateClientError_MsgAndUrlError")
+		}
 	}
 }
