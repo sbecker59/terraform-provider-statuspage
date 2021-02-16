@@ -11,11 +11,13 @@ import (
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	providerVersion "github.com/sbecker59/terraform-provider-statuspage/version"
 
-	"github.com/hashicorp/terraform-plugin-sdk/meta"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/meta"
 )
 
-var statuspageProvider *schema.Provider
+var (
+	statuspageProvider *schema.Provider
+)
 
 func Provider() *schema.Provider {
 	statuspageProvider = &schema.Provider{

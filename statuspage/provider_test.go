@@ -12,16 +12,22 @@ import (
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 )
 
-var testAccProviders map[string]*schema.Provider
-var testAccProvider *schema.Provider
-var pageId string
+var (
+	testAccProviders map[string]*schema.Provider
+	testAccProvider  *schema.Provider
+	pageID           string
+)
 
 func init() {
 	testAccProvider = Provider()
 	testAccProviders = map[string]*schema.Provider{
 		"statuspage": testAccProvider,
 	}
-	pageId = os.Getenv("STATUSPAGE_PAGE_ID")
+	pageID = os.Getenv("STATUSPAGE_PAGE_ID")
+}
+
+func isDebug() bool {
+	return os.Getenv("DEBUG") == "true"
 }
 
 func isAPIKeySet() bool {
@@ -52,8 +58,10 @@ func testAccPreCheck(t *testing.T) {
 	}
 }
 
-func buildStatuspageClientV1(httpclient *http.Client) *sp.APIClient {
+func buildStatuspageClientV1(httpClient *http.Client) *sp.APIClient {
 	configV1 := sp.NewConfiguration()
+	configV1.Debug = isDebug()
+	configV1.HTTPClient = httpClient
 	configV1.UserAgent = getUserAgent(configV1.UserAgent)
 	return sp.NewAPIClient(configV1)
 }
