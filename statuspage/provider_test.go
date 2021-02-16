@@ -2,7 +2,6 @@ package statuspage
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -100,7 +99,6 @@ func TestUnittranslateClientError_MsgAndGenericOpenAPIError(t *testing.T) {
 	}
 
 	if err := translateClientError(genericOpenAPIError, ""); err != nil {
-		fmt.Printf("%s", err)
 		if !strings.Contains(err.Error(), "an error occurred: GenericOpenAPIError") {
 			t.Error("TestUnittranslateClientError_MsgAndGenericOpenAPIError")
 		}
@@ -116,7 +114,6 @@ func TestUnittranslateClientError_MsgAndUrlError(t *testing.T) {
 	}
 
 	if err := translateClientError(urlError, ""); err != nil {
-		fmt.Printf("%s", err)
 		if !strings.Contains(err.Error(), "an error occurred: (url.Error): Op") && !strings.Contains(err.Error(), "Url") && !strings.Contains(err.Error(), "Err") {
 			t.Error("TestUnittranslateClientError_MsgAndUrlError")
 		}
