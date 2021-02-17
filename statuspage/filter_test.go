@@ -698,3 +698,37 @@ func Test_checkAndConvertMap(t *testing.T) {
 		})
 	}
 }
+
+func Test_checkAndConvertNestedStructure(t *testing.T) {
+
+	var m []interface{}
+	m = append(m, map[string]interface{}{"key1": "value1"})
+
+	var m1 []interface{}
+	m1 = append(m, map[string]interface{}{"key1": "value1"})
+	m1 = append(m, map[string]interface{}{"key2": "value2"})
+
+	type args struct {
+		element interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  map[string]interface{}
+		want1 bool
+	}{
+		{name: "array_single_value", args: args{m}, want: map[string]interface{}{"key1": "value1"}, want1: true},
+		{name: "array_mutiple_values", args: args{m1}, want: nil, want1: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := checkAndConvertNestedStructure(tt.args.element)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("checkAndConvertNestedStructure() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("checkAndConvertNestedStructure() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}

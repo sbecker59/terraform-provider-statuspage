@@ -14,21 +14,21 @@ func TestAccStatuspageMetricProvider_Basic(t *testing.T) {
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStatuspageMetricProviderDestroy,
-		Steps:        []resource.TestStep{
-			// {
-			// 	Config: testAccCheckMetricProviderConfig(),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("statuspage_metric_provider.default", "id"),
-			// 		resource.TestCheckResourceAttr("statuspage_metric_provider.default", "type", "Datadog"),
-			// 	),
-			// },
-			// {
-			// 	Config: testAccCheckMetricProviderConfigUpdated(),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("statuspage_metric_provider.default", "id"),
-			// 		resource.TestCheckResourceAttr("statuspage_metric_provider.default", "type", "Datadog"),
-			// 	),
-			// },
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckMetricProviderConfig(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("statuspage_metric_provider.default", "id"),
+					resource.TestCheckResourceAttr("statuspage_metric_provider.default", "type", "Datadog"),
+				),
+			},
+			{
+				Config: testAccCheckMetricProviderConfigUpdated(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("statuspage_metric_provider.default", "id"),
+					resource.TestCheckResourceAttr("statuspage_metric_provider.default", "type", "Datadog"),
+				),
+			},
 		},
 	})
 }
@@ -80,6 +80,8 @@ func testAccCheckStatuspageMetricProviderDestroy(s *terraform.State) error {
 	conn := testAccProvider.Meta().(*ProviderConfiguration)
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
+
+	conn.Ratelimiter.Wait(authV1)
 
 	for _, r := range s.RootModule().Resources {
 		_, httpresp, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, pageID, r.Primary.ID).Execute()

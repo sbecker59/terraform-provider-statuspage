@@ -14,10 +14,7 @@ func resourceComponentGroupRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
@@ -46,10 +43,7 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
@@ -88,10 +82,7 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
@@ -128,12 +119,9 @@ func resourceComponentGroupDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
-	_, _, err = statuspageClientV1.ComponentGroupsApi.DeletePagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, _, err := statuspageClientV1.ComponentGroupsApi.DeletePagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
 		return translateClientError(err, "failed to delete component using Status Page API")

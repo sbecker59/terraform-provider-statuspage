@@ -62,10 +62,7 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Execute()
 

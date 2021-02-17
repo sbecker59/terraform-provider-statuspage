@@ -94,7 +94,10 @@ func testAccCheckStatuspageComponentGroupDestroy(s *terraform.State) error {
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
 
+	conn.Ratelimiter.Wait(authV1)
+
 	for _, r := range s.RootModule().Resources {
+
 		_, httpresp, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroupsId(authV1, pageID, r.Primary.ID).Execute()
 		if err.Error() != "" {
 			if httpresp != nil && httpresp.StatusCode == 404 {

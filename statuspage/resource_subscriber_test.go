@@ -27,6 +27,7 @@ func TestAccStatuspageSubscriber_Basic(t *testing.T) {
 				Config: testAccCheckSubscriberConfigUpdated(rid),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("statuspage_subscriber.default", "id"),
+					resource.TestCheckResourceAttr("statuspage_subscriber.default", "email", fmt.Sprintf("email-updated-%d@testacc.tf", rid)),
 				),
 			},
 		},
@@ -50,7 +51,7 @@ func testAccCheckSubscriberConfig(rand int) string {
 func testAccCheckSubscriberConfigUpdated(rand int) string {
 	return fmt.Sprintf(`
 	variable "email" {
-		default = "email-%d@testacc.tf"
+		default = "email-updated-%d@testacc.tf"
 	}
 	variable "pageid" {
 		default = "%s"
@@ -66,6 +67,8 @@ func testAccCheckStatuspageSubscriberDestroy(s *terraform.State) error {
 	conn := testAccProvider.Meta().(*ProviderConfiguration)
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
+
+	conn.Ratelimiter.Wait(authV1)
 
 	for _, r := range s.RootModule().Resources {
 		_, httpresp, err := statuspageClientV1.SubscribersApi.GetPagesPageIdSubscribersSubscriberId(authV1, pageID, r.Primary.ID).Execute()

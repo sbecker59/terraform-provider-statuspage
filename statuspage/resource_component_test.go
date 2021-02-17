@@ -79,6 +79,8 @@ func testAccCheckStatuspageComponentDestroy(s *terraform.State) error {
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
 
+	conn.Ratelimiter.Wait(authV1)
+
 	for _, r := range s.RootModule().Resources {
 		_, httpresp, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, pageID, r.Primary.ID).Execute()
 		if err.Error() != "" {

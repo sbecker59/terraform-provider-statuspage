@@ -16,10 +16,7 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
@@ -50,10 +47,7 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
@@ -94,10 +88,7 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
@@ -136,12 +127,9 @@ func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return translateClientError(err, "error Ratelimiter")
-	}
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
-	_, err = statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
 		return translateClientError(err, "failed to delete component using Status Page API")
