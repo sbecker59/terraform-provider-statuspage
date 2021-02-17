@@ -47,6 +47,20 @@ func isPageIdSet() bool {
 	return false
 }
 
+func isDatadogApiKeySet() bool {
+	if os.Getenv("DD_API_KEY") != "" {
+		return true
+	}
+	return false
+}
+
+func isDatadogAppKeySet() bool {
+	if os.Getenv("DD_APP_KEY") != "" {
+		return true
+	}
+	return false
+}
+
 // testAccPreCheck validates the necessary test API keys exist
 // in the testing environment
 func testAccPreCheck(t *testing.T) {
@@ -55,6 +69,12 @@ func testAccPreCheck(t *testing.T) {
 	}
 	if !isPageIdSet() {
 		t.Fatal("STATUSPAGE_PAGE_ID must be set for acceptance tests")
+	}
+	if !isDatadogApiKeySet() {
+		t.Fatal("DD_API_KEY must be set for acceptance tests")
+	}
+	if !isDatadogAppKeySet() {
+		t.Fatal("DD_APP_KEY must be set for acceptance tests")
 	}
 }
 

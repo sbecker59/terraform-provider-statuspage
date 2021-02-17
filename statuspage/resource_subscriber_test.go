@@ -23,11 +23,31 @@ func TestAccStatuspageSubscriber_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr("statuspage_subscriber.default", "email", fmt.Sprintf("email-%d@testacc.tf", rid)),
 				),
 			},
+			{
+				Config: testAccCheckSubscriberConfigUpdated(rid),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("statuspage_subscriber.default", "id"),
+				),
+			},
 		},
 	})
 }
 
 func testAccCheckSubscriberConfig(rand int) string {
+	return fmt.Sprintf(`
+	variable "email" {
+		default = "email-%d@testacc.tf"
+	}
+	variable "pageid" {
+		default = "%s"
+	}
+	resource "statuspage_subscriber" "default" {
+		page_id = var.pageid
+		email = var.email
+	}
+	`, rand, pageID)
+}
+func testAccCheckSubscriberConfigUpdated(rand int) string {
 	return fmt.Sprintf(`
 	variable "email" {
 		default = "email-%d@testacc.tf"
