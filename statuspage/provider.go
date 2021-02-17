@@ -10,6 +10,7 @@ import (
 
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	providerVersion "github.com/sbecker59/terraform-provider-statuspage/version"
+	"golang.org/x/time/rate"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/meta"
@@ -50,7 +51,8 @@ type ProviderConfiguration struct {
 	StatuspageClientV1 *sp.APIClient
 	AuthV1             context.Context
 
-	now func() time.Time
+	now         func() time.Time
+	Ratelimiter *rate.Limiter
 }
 
 func (p *ProviderConfiguration) Now() time.Time {
@@ -84,6 +86,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		StatuspageClientV1: statuspageClientV1,
 		AuthV1:             authV1,
 		now:                time.Now,
+		Ratelimiter:        rate.NewLimiter(rate.Every(2*time.Second), 1),
 	}, nil
 
 }

@@ -13,6 +13,11 @@ func resourceSubscriberRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
 	resp, _, err := statuspageClientV1.SubscribersApi.GetPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err.Error() != "" {
 		return translateClientError(err, "failed to get component groups using Status Page API")
@@ -36,6 +41,11 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
 
 	var subscriber sp.PostPagesPageIdSubscribersSubscriber
 
@@ -67,6 +77,11 @@ func resourceSubscriberUpdate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
 	o := *sp.NewPatchPagesPageIdSubscribers()
 
 	result, _, err := statuspageClientV1.SubscribersApi.PatchPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdSubscribers(o).Execute()
@@ -87,7 +102,12 @@ func resourceSubscriberDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, _, err := statuspageClientV1.SubscribersApi.DeletePagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
+	_, _, err = statuspageClientV1.SubscribersApi.DeletePagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
 		return translateClientError(err, "failed to delete subscriber using Status Page API")

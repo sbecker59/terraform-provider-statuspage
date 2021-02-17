@@ -11,6 +11,11 @@ func resourceMetricProviderRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
 	metricProvider, _, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
@@ -33,6 +38,11 @@ func resourceMetricProviderCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
 
 	email := d.Get("email").(string)
 	password := d.Get("password").(string)
@@ -71,6 +81,11 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
 	metricBaseURI := d.Get("metric_base_uri").(string)
 	metricType := d.Get("type").(string)
 
@@ -98,7 +113,12 @@ func resourceMetricProviderDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, _, err := statuspageClientV1.MetricProvidersApi.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	err := providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return translateClientError(err, "error Ratelimiter")
+	}
+
+	_, _, err = statuspageClientV1.MetricProvidersApi.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
 		return translateClientError(err, "failed to delete component using Status Page API")

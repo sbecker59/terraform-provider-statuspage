@@ -38,7 +38,7 @@ testacc:
 	
 
 cover:
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -coverprofile=coverage.txt -covermode=atomic ./...
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -coverprofile=coverage.txt -covermode=atomic ./...
 
 .PHONY: docs
 docs:
