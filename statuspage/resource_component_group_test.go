@@ -6,13 +6,15 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccStatuspageComponentGroup_Basic(t *testing.T) {
 	rid := acctest.RandIntRange(1, 99)
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckStatuspageComponentGroupDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckComponentGroupConfig(rid),
@@ -54,7 +56,7 @@ func testAccCheckComponentGroupConfig(rand int) string {
 		description = "Acc. Tests"
 		components  = ["${statuspage_component.component_1.id}"]
 	}
-	`, rand, pageId)
+	`, rand, pageID)
 }
 
 func testAccCheckComponentGroupConfigUpdated(rand int) string {
@@ -83,5 +85,28 @@ func testAccCheckComponentGroupConfigUpdated(rand int) string {
 		description = "Acc. Tests"
 		components  = ["${statuspage_component.component_1.id}", "${statuspage_component.component_2.id}"]
 	}
-	`, rand, pageId)
+	`, rand, pageID)
+}
+
+func testAccCheckStatuspageComponentGroupDestroy(s *terraform.State) error {
+
+	conn := testAccProvider.Meta().(*ProviderConfiguration)
+	statuspageClientV1 := conn.StatuspageClientV1
+	authV1 := conn.AuthV1
+
+	conn.Ratelimiter.Wait(authV1)
+
+	for _, r := range s.RootModule().Resources {
+
+		_, httpresp, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroupsId(authV1, pageID, r.Primary.ID).Execute()
+		if err.Error() != "" {
+			if httpresp != nil && httpresp.StatusCode == 404 {
+				continue
+			}
+			return translateClientError(err, "error retrieving component group")
+		}
+		return fmt.Errorf("component group still exists")
+	}
+	return nil
+
 }

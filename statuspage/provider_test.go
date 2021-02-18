@@ -2,7 +2,6 @@ package statuspage
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -13,16 +12,22 @@ import (
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 )
 
-var testAccProviders map[string]*schema.Provider
-var testAccProvider *schema.Provider
-var pageId string
+var (
+	testAccProviders map[string]*schema.Provider
+	testAccProvider  *schema.Provider
+	pageID           string
+)
 
 func init() {
 	testAccProvider = Provider()
 	testAccProviders = map[string]*schema.Provider{
 		"statuspage": testAccProvider,
 	}
-	pageId = os.Getenv("STATUSPAGE_PAGE_ID")
+	pageID = os.Getenv("STATUSPAGE_PAGE_ID")
+}
+
+func isDebug() bool {
+	return os.Getenv("DEBUG") == "true"
 }
 
 func isAPIKeySet() bool {
@@ -42,6 +47,20 @@ func isPageIdSet() bool {
 	return false
 }
 
+func isDatadogApiKeySet() bool {
+	if os.Getenv("DD_API_KEY") != "" {
+		return true
+	}
+	return false
+}
+
+func isDatadogAppKeySet() bool {
+	if os.Getenv("DD_APP_KEY") != "" {
+		return true
+	}
+	return false
+}
+
 // testAccPreCheck validates the necessary test API keys exist
 // in the testing environment
 func testAccPreCheck(t *testing.T) {
@@ -51,10 +70,18 @@ func testAccPreCheck(t *testing.T) {
 	if !isPageIdSet() {
 		t.Fatal("STATUSPAGE_PAGE_ID must be set for acceptance tests")
 	}
+	if !isDatadogApiKeySet() {
+		t.Fatal("DD_API_KEY must be set for acceptance tests")
+	}
+	if !isDatadogAppKeySet() {
+		t.Fatal("DD_APP_KEY must be set for acceptance tests")
+	}
 }
 
-func buildStatuspageClientV1(httpclient *http.Client) *sp.APIClient {
+func buildStatuspageClientV1(httpClient *http.Client) *sp.APIClient {
 	configV1 := sp.NewConfiguration()
+	configV1.Debug = isDebug()
+	configV1.HTTPClient = httpClient
 	configV1.UserAgent = getUserAgent(configV1.UserAgent)
 	return sp.NewAPIClient(configV1)
 }
@@ -100,7 +127,6 @@ func TestUnittranslateClientError_MsgAndGenericOpenAPIError(t *testing.T) {
 	}
 
 	if err := translateClientError(genericOpenAPIError, ""); err != nil {
-		fmt.Printf("%s", err)
 		if !strings.Contains(err.Error(), "an error occurred: GenericOpenAPIError") {
 			t.Error("TestUnittranslateClientError_MsgAndGenericOpenAPIError")
 		}
@@ -116,7 +142,6 @@ func TestUnittranslateClientError_MsgAndUrlError(t *testing.T) {
 	}
 
 	if err := translateClientError(urlError, ""); err != nil {
-		fmt.Printf("%s", err)
 		if !strings.Contains(err.Error(), "an error occurred: (url.Error): Op") && !strings.Contains(err.Error(), "Url") && !strings.Contains(err.Error(), "Err") {
 			t.Error("TestUnittranslateClientError_MsgAndUrlError")
 		}

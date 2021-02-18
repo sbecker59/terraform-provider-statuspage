@@ -6,13 +6,15 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccStatuspageComponent_Basic(t *testing.T) {
 	rid := acctest.RandIntRange(1, 99)
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckStatuspageComponentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckComponentConfig(rid),
@@ -51,7 +53,7 @@ func testAccCheckComponentConfig(rand int) string {
 		status = "operational"
 		showcase = true
 	}
-	`, rand, pageId)
+	`, rand, pageID)
 }
 
 func testAccCheckComponentConfigUpdated(rand int) string {
@@ -69,5 +71,25 @@ func testAccCheckComponentConfigUpdated(rand int) string {
 		status = "major_outage"
 		showcase = false
 	}
-	`, rand, pageId)
+	`, rand, pageID)
+}
+
+func testAccCheckStatuspageComponentDestroy(s *terraform.State) error {
+	conn := testAccProvider.Meta().(*ProviderConfiguration)
+	statuspageClientV1 := conn.StatuspageClientV1
+	authV1 := conn.AuthV1
+
+	conn.Ratelimiter.Wait(authV1)
+
+	for _, r := range s.RootModule().Resources {
+		_, httpresp, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, pageID, r.Primary.ID).Execute()
+		if err.Error() != "" {
+			if httpresp != nil && httpresp.StatusCode == 404 {
+				continue
+			}
+			return translateClientError(err, "error retrieving component")
+		}
+		return fmt.Errorf("component still exists")
+	}
+	return nil
 }

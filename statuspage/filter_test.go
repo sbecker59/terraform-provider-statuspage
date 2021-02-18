@@ -2,6 +2,7 @@ package statuspage
 
 import (
 	"encoding/json"
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
@@ -631,4 +632,103 @@ func genericMapToJsonMap(genericMap map[string]interface{}) map[string]interface
 	}
 
 	return result
+}
+
+func Test_convertToObjectMap(t *testing.T) {
+
+	m := make(map[string]string)
+	m["key1"] = "value1"
+
+	m1 := make(map[string]string)
+	m1["key1"] = ""
+
+	type args struct {
+		stringTostring map[string]string
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string]interface{}
+	}{
+		{name: "stringNoEmpty", args: args{m}, want: map[string]interface{}{"key1": "value1"}},
+		{name: "stringEmpty", args: args{m1}, want: map[string]interface{}{"key1": ""}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := convertToObjectMap(tt.args.stringTostring); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("convertToObjectMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_checkAndConvertMap(t *testing.T) {
+
+	m := make(map[string]string)
+	m["key1"] = "value1"
+
+	m1 := make(map[string]interface{})
+	m1["key1"] = "value1"
+
+	m2 := make(map[string]int)
+	m2["key1"] = 1
+
+	type args struct {
+		element interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  map[string]interface{}
+		want1 bool
+	}{
+		{name: "string", args: args{m}, want: map[string]interface{}{"key1": "value1"}, want1: true},
+		{name: "interface", args: args{m1}, want: map[string]interface{}{"key1": "value1"}, want1: true},
+		{name: "int", args: args{m2}, want: nil, want1: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := checkAndConvertMap(tt.args.element)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("checkAndConvertMap() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("checkAndConvertMap() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_checkAndConvertNestedStructure(t *testing.T) {
+
+	var m []interface{}
+	m = append(m, map[string]interface{}{"key1": "value1"})
+
+	var m1 []interface{}
+	m1 = append(m, map[string]interface{}{"key1": "value1"})
+	m1 = append(m, map[string]interface{}{"key2": "value2"})
+
+	type args struct {
+		element interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  map[string]interface{}
+		want1 bool
+	}{
+		{name: "array_single_value", args: args{m}, want: map[string]interface{}{"key1": "value1"}, want1: true},
+		{name: "array_mutiple_values", args: args{m1}, want: nil, want1: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := checkAndConvertNestedStructure(tt.args.element)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("checkAndConvertNestedStructure() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("checkAndConvertNestedStructure() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
 }

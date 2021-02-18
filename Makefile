@@ -34,11 +34,11 @@ test:
 	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4                    
 
 testacc: 
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel=1
 	
 
 cover:
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -coverprofile=coverage.txt -covermode=atomic ./...
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel=1 -coverprofile=coverage.txt -covermode=atomic ./...
 
 .PHONY: docs
 docs:

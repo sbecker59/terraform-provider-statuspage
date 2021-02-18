@@ -11,6 +11,8 @@ func resourceMetricProviderRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+
 	metricProvider, _, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
@@ -33,6 +35,8 @@ func resourceMetricProviderCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	email := d.Get("email").(string)
 	password := d.Get("password").(string)
@@ -71,6 +75,8 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+
 	metricBaseURI := d.Get("metric_base_uri").(string)
 	metricType := d.Get("type").(string)
 
@@ -97,6 +103,8 @@ func resourceMetricProviderDelete(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	_, _, err := statuspageClientV1.MetricProvidersApi.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 

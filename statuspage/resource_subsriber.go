@@ -13,6 +13,8 @@ func resourceSubscriberRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
+
 	resp, _, err := statuspageClientV1.SubscribersApi.GetPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err.Error() != "" {
 		return translateClientError(err, "failed to get component groups using Status Page API")
@@ -36,6 +38,8 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	var subscriber sp.PostPagesPageIdSubscribersSubscriber
 
@@ -61,31 +65,13 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 
 }
 
-func resourceSubscriberUpdate(d *schema.ResourceData, m interface{}) error {
-
-	providerConf := m.(*ProviderConfiguration)
-	statuspageClientV1 := providerConf.StatuspageClientV1
-	authV1 := providerConf.AuthV1
-
-	o := *sp.NewPatchPagesPageIdSubscribers()
-
-	result, _, err := statuspageClientV1.SubscribersApi.PatchPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdSubscribers(o).Execute()
-
-	if err.Error() != "" {
-		return translateClientError(err, "failed to update subscriber using Status Page API")
-	}
-
-	d.SetId(result.GetId())
-
-	return resourceSubscriberRead(d, m)
-
-}
-
 func resourceSubscriberDelete(d *schema.ResourceData, m interface{}) error {
 
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
+
+	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	_, _, err := statuspageClientV1.SubscribersApi.DeletePagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
@@ -101,7 +87,6 @@ func resourceSubscriber() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceSubscriberCreate,
 		Read:   resourceSubscriberRead,
-		Update: resourceSubscriberUpdate,
 		Delete: resourceSubscriberDelete,
 		Schema: map[string]*schema.Schema{
 			"page_id": {
@@ -114,11 +99,13 @@ func resourceSubscriber() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "the email address for creating Email and Webhook subscribers",
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"endpoint": {
 				Type:        schema.TypeString,
 				Description: "The endpoint URI for creating Webhook subscribers",
 				Optional:    true,
+				ForceNew:    true,
 			},
 			// "phone_country": {
 			// 	Type:        schema.TypeString,
