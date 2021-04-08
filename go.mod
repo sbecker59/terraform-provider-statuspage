@@ -3,7 +3,7 @@ module github.com/sbecker59/terraform-provider-statuspage
 go 1.15
 
 require (
-	github.com/hashicorp/terraform v0.14.8
+	github.com/hashicorp/terraform v0.14.10
 	github.com/hashicorp/terraform-plugin-docs v0.4.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.4.4
 	github.com/sbecker59/statuspage-api-client-go v0.0.0-20210218190856-5d9278da7984
