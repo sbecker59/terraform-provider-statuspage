@@ -3,6 +3,7 @@ package statuspage
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -10,7 +11,10 @@ import (
 )
 
 func TestAccStatuspageComponent_Basic(t *testing.T) {
+
+	time.Sleep(10 * time.Second)
 	rid := acctest.RandIntRange(1, 99)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

@@ -86,7 +86,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		StatuspageClientV1: statuspageClientV1,
 		AuthV1:             authV1,
 		now:                time.Now,
-		Ratelimiter:        rate.NewLimiter(rate.Every(1400*time.Millisecond), 1),
+		Ratelimiter:        rate.NewLimiter(rate.Every(1200*time.Millisecond), 1),
 	}, nil
 
 }
