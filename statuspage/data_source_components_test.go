@@ -15,7 +15,7 @@ func TestAccStatuspageComponentsDatasource(t *testing.T) {
 	time.Sleep(10 * time.Second)
 	rid := acctest.RandIntRange(1, 99)
 
-	resource.ParallelTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckStatuspageComponentGroupDestroy,
