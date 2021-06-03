@@ -1,11 +1,10 @@
 module github.com/sbecker59/terraform-provider-statuspage
 
-go 1.15
+go 1.16
 
 require (
-	github.com/hashicorp/terraform v0.14.10
 	github.com/hashicorp/terraform-plugin-docs v0.4.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.6.1
-	github.com/sbecker59/statuspage-api-client-go v0.0.0-20210218190856-5d9278da7984
-	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
+	github.com/sbecker59/statuspage-api-client-go v0.0.0-20210605095645-65c9d329d44a
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 )

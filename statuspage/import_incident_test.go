@@ -10,25 +10,25 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestStatuspageComponentGroup_import(t *testing.T) {
-	resourceName := "statuspage_component_group.default"
+func TestStatuspageIncident_import(t *testing.T) {
+	resourceName := "statuspage_incident.default"
 	time.Sleep(10 * time.Second)
 	rid := acctest.RandIntRange(1, 99)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckStatuspageComponentGroupDestroy,
+		CheckDestroy: testAccCheckStatuspageIncidentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckStatuspageComponentGroupConfigImported(rid),
+				Config: testAccCheckStatuspageIncidentConfigImported(rid),
 			},
 			{
 				ResourceName:      resourceName,
 				ImportState:       true,
 				ImportStateVerify: true,
 				ImportStateIdFunc: func(ts *terraform.State) (string, error) {
-					rs := ts.RootModule().Resources["statuspage_component_group.default"]
+					rs := ts.RootModule().Resources["statuspage_incident.default"]
 					return fmt.Sprintf("%s/%s", pageID, rs.Primary.ID), nil
 				},
 			},
@@ -36,25 +36,19 @@ func TestStatuspageComponentGroup_import(t *testing.T) {
 	})
 }
 
-func testAccCheckStatuspageComponentGroupConfigImported(rand int) string {
+func testAccCheckStatuspageIncidentConfigImported(rand int) string {
 	return fmt.Sprintf(`
-	variable "component_name" {
-		default = "tf-testacc-component-group-%d"
+	variable "name" {
+		default = "tf-testacc-component-%d"
 	}
 	variable "pageid" {
 		default = "%s"
 	}
-	resource "statuspage_component" "comp1" {
+	resource "statuspage_incident" "default" {
 		page_id = "${var.pageid}"
-		name = "${var.component_name}_component"
-		description = "test component"
-		status = "operational"
-	}
-	resource "statuspage_component_group" "default" {
-		page_id     = "${var.pageid}"
-		name        = "${var.component_name}"
-		description = "Acc. Tests"
-		components  = ["${statuspage_component.comp1.id}"]
+		name = "${var.name}"
+		impact_override = "critical"
+		status = "identified"
 	}
 	`, rand, pageID)
 }
