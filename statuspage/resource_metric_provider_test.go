@@ -4,12 +4,16 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccStatuspageMetricProvider_Basic(t *testing.T) {
+
+	time.Sleep(10 * time.Second)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

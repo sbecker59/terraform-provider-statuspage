@@ -3,6 +3,7 @@ package statuspage
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -11,6 +12,7 @@ import (
 
 func TestStatuspageComponentGroup_import(t *testing.T) {
 	resourceName := "statuspage_component_group.default"
+	time.Sleep(10 * time.Second)
 	rid := acctest.RandIntRange(1, 99)
 
 	resource.ParallelTest(t, resource.TestCase{
