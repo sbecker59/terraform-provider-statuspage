@@ -10,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
+	retryablehttp "github.com/sbecker59/terraform-provider-statuspage/statuspage/internal/go-retryablehttp"
 )
 
 var (
@@ -81,7 +82,7 @@ func testAccPreCheck(t *testing.T) {
 func buildStatuspageClientV1(httpClient *http.Client) *sp.APIClient {
 	configV1 := sp.NewConfiguration()
 	configV1.Debug = isDebug()
-	configV1.HTTPClient = httpClient
+	configV1.HTTPClient = retryablehttp.NewClient().StandardClient()
 	configV1.UserAgent = getUserAgent(configV1.UserAgent)
 	return sp.NewAPIClient(configV1)
 }
@@ -92,18 +93,18 @@ func TestProvider(t *testing.T) {
 	}
 }
 
-func TestUnittranslateClientError_MsgEmptyAndGenericError(t *testing.T) {
-	if err := translateClientError(errors.New(""), ""); err != nil {
+func TestUnitTranslateClientErrorDiag_MsgEmptyAndGenericError(t *testing.T) {
+	if err := TranslateClientErrorDiag(errors.New(""), ""); err != nil {
 		if !strings.Contains(err.Error(), "an error occurred") {
-			t.Error("TestUnittranslateClientError_MsgEmptyAndGenericError")
+			t.Error("TestUnitTranslateClientErrorDiag_MsgEmptyAndGenericError")
 		}
 	}
 }
 
-func TestUnittranslateClientError_MsgAndGenericError(t *testing.T) {
-	if err := translateClientError(errors.New(""), ""); err != nil {
+func TestUnitTranslateClientErrorDiag_MsgAndGenericError(t *testing.T) {
+	if err := TranslateClientErrorDiag(errors.New(""), ""); err != nil {
 		if !strings.Contains(err.Error(), "an error occurred") {
-			t.Error("TestUnittranslateClientError_MsgAndGenericError")
+			t.Error("TestUnitTranslateClientErrorDiag_MsgAndGenericError")
 		}
 	}
 }
@@ -118,7 +119,7 @@ func (e GenericOpenAPIError) Error() string {
 	return e.error
 }
 
-func TestUnittranslateClientError_MsgAndGenericOpenAPIError(t *testing.T) {
+func TestUnitTranslateClientErrorDiag_MsgAndGenericOpenAPIError(t *testing.T) {
 
 	genericOpenAPIError := GenericOpenAPIError{
 		body:  make([]byte, 128),
@@ -126,14 +127,14 @@ func TestUnittranslateClientError_MsgAndGenericOpenAPIError(t *testing.T) {
 		model: nil,
 	}
 
-	if err := translateClientError(genericOpenAPIError, ""); err != nil {
+	if err := TranslateClientErrorDiag(genericOpenAPIError, ""); err != nil {
 		if !strings.Contains(err.Error(), "an error occurred: GenericOpenAPIError") {
-			t.Error("TestUnittranslateClientError_MsgAndGenericOpenAPIError")
+			t.Error("TestUnitTranslateClientErrorDiag_MsgAndGenericOpenAPIError")
 		}
 	}
 }
 
-func TestUnittranslateClientError_MsgAndUrlError(t *testing.T) {
+func TestUnitTranslateClientErrorDiag_MsgAndUrlError(t *testing.T) {
 
 	urlError := &url.Error{
 		Op:  "Op",
@@ -141,9 +142,9 @@ func TestUnittranslateClientError_MsgAndUrlError(t *testing.T) {
 		Err: errors.New("Err"),
 	}
 
-	if err := translateClientError(urlError, ""); err != nil {
+	if err := TranslateClientErrorDiag(urlError, ""); err != nil {
 		if !strings.Contains(err.Error(), "an error occurred: (url.Error): Op") && !strings.Contains(err.Error(), "Url") && !strings.Contains(err.Error(), "Err") {
-			t.Error("TestUnittranslateClientError_MsgAndUrlError")
+			t.Error("TestUnitTranslateClientErrorDiag_MsgAndUrlError")
 		}
 	}
 }

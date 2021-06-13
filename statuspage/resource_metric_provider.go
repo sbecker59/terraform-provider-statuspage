@@ -11,12 +11,10 @@ func resourceMetricProviderRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	metricProvider, _, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to get metric provider using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to get metric provider using Status Page API")
 	}
 
 	if &metricProvider == nil {
@@ -35,8 +33,6 @@ func resourceMetricProviderCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	email := d.Get("email").(string)
 	password := d.Get("password").(string)
@@ -62,7 +58,7 @@ func resourceMetricProviderCreate(d *schema.ResourceData, m interface{}) error {
 	resp, _, err := statuspageClientV1.MetricProvidersApi.PostPagesPageIdMetricsProviders(authV1, d.Get("page_id").(string)).PostPagesPageIdMetricsProviders(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create metric provider using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create metric provider using Status Page API")
 	}
 
 	d.SetId(resp.GetId())
@@ -74,8 +70,6 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	metricBaseURI := d.Get("metric_base_uri").(string)
 	metricType := d.Get("type").(string)
@@ -91,7 +85,7 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	resp, _, err := statuspageClientV1.MetricProvidersApi.PatchPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdMetricsProviders(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create metric provider using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create metric provider using Status Page API")
 	}
 
 	d.SetId(resp.GetId())
@@ -104,12 +98,10 @@ func resourceMetricProviderDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	_, _, err := statuspageClientV1.MetricProvidersApi.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to delete component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
 	}
 
 	return nil

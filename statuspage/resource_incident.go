@@ -16,14 +16,12 @@ func resourceIncidentRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page incident '%s'", name)
 
 	incident, _, err := statuspageClientV1.IncidentsApi.GetPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err.Error() != "" {
-		return translateClientError(err, "failed to get incident using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to get incident using Status Page API")
 	}
 
 	if &incident == nil {
@@ -57,8 +55,6 @@ func resourceIncidentCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
@@ -106,7 +102,7 @@ func resourceIncidentCreate(d *schema.ResourceData, m interface{}) error {
 	result, _, err := statuspageClientV1.IncidentsApi.PostPagesPageIdIncidents(authV1, d.Get("page_id").(string)).PostPagesPageIdIncidents(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create incident using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create incident using Status Page API")
 	}
 
 	d.SetId(result.GetId())
@@ -120,8 +116,6 @@ func resourceIncidentUpdate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
@@ -169,7 +163,7 @@ func resourceIncidentUpdate(d *schema.ResourceData, m interface{}) error {
 	result, _, err := statuspageClientV1.IncidentsApi.PatchPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdIncidents(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to update incident using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to update incident using Status Page API")
 	}
 
 	d.SetId(result.GetId())
@@ -182,12 +176,10 @@ func resourceIncidentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	_, _, err := statuspageClientV1.IncidentsApi.DeletePagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to delete incident using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to delete incident using Status Page API")
 	}
 
 	return nil

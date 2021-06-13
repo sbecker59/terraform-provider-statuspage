@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/sbecker59/terraform-provider-statuspage/statuspage/hashcode"
+	"github.com/sbecker59/terraform-provider-statuspage/statuspage/internal/hashcode"
 )
 
 func GenerateDataSourceHashID(idPrefix string, resourceSchema *schema.Resource, resourceData *schema.ResourceData) string {

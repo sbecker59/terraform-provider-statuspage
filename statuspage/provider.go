@@ -10,10 +10,11 @@ import (
 
 	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	providerVersion "github.com/sbecker59/terraform-provider-statuspage/version"
-	"golang.org/x/time/rate"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/meta"
+	retryablehttp "github.com/sbecker59/terraform-provider-statuspage/statuspage/internal/go-retryablehttp"
 )
 
 var (
@@ -51,8 +52,7 @@ type ProviderConfiguration struct {
 	StatuspageClientV1 *sp.APIClient
 	AuthV1             context.Context
 
-	now         func() time.Time
-	Ratelimiter *rate.Limiter
+	now func() time.Time
 }
 
 func (p *ProviderConfiguration) Now() time.Time {
@@ -79,6 +79,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	)
 
 	config := sp.NewConfiguration()
+	config.HTTPClient = retryablehttp.NewClient().StandardClient()
 	config.UserAgent = getUserAgent(config.UserAgent)
 	statuspageClientV1 := sp.NewAPIClient(config)
 
@@ -86,12 +87,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		StatuspageClientV1: statuspageClientV1,
 		AuthV1:             authV1,
 		now:                time.Now,
-		Ratelimiter:        rate.NewLimiter(rate.Every(1200*time.Millisecond), 1),
 	}, nil
 
 }
 
-func translateClientError(err error, msg string) error {
+func TranslateClientErrorDiag(err error, msg string) error {
 	if msg == "" {
 		msg = "an error occurred"
 	}
@@ -104,6 +104,11 @@ func translateClientError(err error, msg string) error {
 	}
 
 	return fmt.Errorf(msg+": %s", err.Error())
+}
+
+// TranslateClientErrorDiagDiag returns client error as type diag.Diagnostics
+func TranslateClientErrorDiagDiag(err error, msg string) diag.Diagnostics {
+	return diag.FromErr(TranslateClientErrorDiag(err, msg))
 }
 
 func getUserAgent(clientUserAgent string) string {

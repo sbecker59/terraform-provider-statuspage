@@ -3,7 +3,6 @@ package statuspage
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -12,7 +11,6 @@ import (
 
 func TestAccStatuspageComponent_Basic(t *testing.T) {
 
-	time.Sleep(10 * time.Second)
 	rid := acctest.RandIntRange(1, 99)
 
 	resource.Test(t, resource.TestCase{
@@ -83,15 +81,13 @@ func testAccCheckStatuspageComponentDestroy(s *terraform.State) error {
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
 
-	conn.Ratelimiter.Wait(authV1)
-
 	for _, r := range s.RootModule().Resources {
 		_, httpresp, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, pageID, r.Primary.ID).Execute()
 		if err.Error() != "" {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue
 			}
-			return translateClientError(err, "error retrieving component")
+			return TranslateClientErrorDiag(err, "error retrieving component")
 		}
 		return fmt.Errorf("component still exists")
 	}
