@@ -49,6 +49,10 @@ func dataSourceComponents() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"automation_email": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -82,6 +86,7 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 			component["description"] = r.GetDescription()
 			component["position"] = r.GetPosition()
 			component["group_id"] = r.GetGroupId()
+			component["automation_email"] = r.GetAutomationEmail()
 
 			resources = append(resources, component)
 		}

@@ -37,6 +37,7 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("only_show_if_degraded", component.GetOnlyShowIfDegraded())
 	d.Set("showcase", component.GetShowcase())
 	d.Set("status", component.GetStatus())
+	d.Set("automation_email", component.GetAutomationEmail())
 
 	return nil
 }
@@ -203,6 +204,10 @@ func resourceComponent() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Should this component be showcased",
 				Optional:    true,
+			},
+			"automation_email": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
