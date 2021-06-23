@@ -66,12 +66,10 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "error querying component list")
+		return TranslateClientErrorDiag(err, "error querying component list")
 	}
 
 	d.SetId(GenerateDataSourceHashID("DataSourceComponents-", dataSourceComponents(), d))

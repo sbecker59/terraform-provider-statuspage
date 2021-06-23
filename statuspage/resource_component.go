@@ -16,14 +16,13 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
-	component, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	component, h, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	log.Printf("[INFO] StatusCode %d", h.StatusCode)
 	if err.Error() != "" {
-		return translateClientError(err, "failed to get component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to get component using Status Page API")
 	}
 
 	if &component == nil {
@@ -48,8 +47,6 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
 	description := d.Get("description").(string)
@@ -71,10 +68,12 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 	o.SetComponent(component)
 
 	log.Printf("[INFO] Creating Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
+	result, h, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
+
+	log.Printf("[INFO] StatusCode %d", h.StatusCode)
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create component using Status Page API")
 	}
 
 	d.SetId(result.GetId())
@@ -88,8 +87,6 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	status := d.Get("status").(string)
@@ -112,10 +109,10 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	o.SetComponent(component)
 
 	log.Printf("[INFO] Update Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
-
+	result, h, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
+	log.Printf("[INFO] StatusCode %d", h.StatusCode)
 	if err.Error() != "" {
-		return translateClientError(err, "failed to update component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to update component using Status Page API")
 	}
 
 	d.SetId(result.GetId())
@@ -128,12 +125,10 @@ func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
-	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
-
+	h, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	log.Printf("[INFO] StatusCode %d", h.StatusCode)
 	if err.Error() != "" {
-		return translateClientError(err, "failed to delete component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
 	}
 
 	return nil

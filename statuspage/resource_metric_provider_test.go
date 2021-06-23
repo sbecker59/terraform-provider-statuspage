@@ -4,15 +4,12 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccStatuspageMetricProvider_Basic(t *testing.T) {
-
-	time.Sleep(10 * time.Second)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -85,15 +82,13 @@ func testAccCheckStatuspageMetricProviderDestroy(s *terraform.State) error {
 	statuspageClientV1 := conn.StatuspageClientV1
 	authV1 := conn.AuthV1
 
-	conn.Ratelimiter.Wait(authV1)
-
 	for _, r := range s.RootModule().Resources {
 		_, httpresp, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, pageID, r.Primary.ID).Execute()
 		if err.Error() != "" {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue
 			}
-			return translateClientError(err, "error retrieving Metric Provider")
+			return TranslateClientErrorDiag(err, "error retrieving Metric Provider")
 		}
 		return fmt.Errorf("Metric Provider still exists")
 	}

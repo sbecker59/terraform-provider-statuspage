@@ -14,15 +14,13 @@ func resourceComponentGroupRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
 	componentGroups, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to get component groups using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to get component groups using Status Page API")
 	}
 
 	if &componentGroups == nil {
@@ -42,8 +40,6 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
@@ -67,7 +63,7 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	resp, _, err := statuspageClientV1.ComponentGroupsApi.PostPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).PostPagesPageIdComponentGroups(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create component groups using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create component groups using Status Page API")
 	}
 
 	d.SetId(resp.GetId())
@@ -81,8 +77,6 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	providerConf := m.(*ProviderConfiguration)
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
-
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
 
 	name := d.Get("name").(string)
 	description := d.Get("description").(string)
@@ -106,7 +100,7 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	resp, _, err := statuspageClientV1.ComponentGroupsApi.PatchPagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponentGroups(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to update component group using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to update component group using Status Page API")
 	}
 
 	d.SetId(resp.GetId())
@@ -119,12 +113,10 @@ func resourceComponentGroupDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	_, _, err := statuspageClientV1.ComponentGroupsApi.DeletePagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to delete component using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
 	}
 
 	return nil

@@ -13,11 +13,9 @@ func resourceSubscriberRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	resp, _, err := statuspageClientV1.SubscribersApi.GetPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err.Error() != "" {
-		return translateClientError(err, "failed to get component groups using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to get component groups using Status Page API")
 	}
 
 	if &resp == nil {
@@ -39,8 +37,6 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	var subscriber sp.PostPagesPageIdSubscribersSubscriber
 
 	if r, ok := d.GetOk("email"); ok {
@@ -56,7 +52,7 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 	result, _, err := statuspageClientV1.SubscribersApi.PostPagesPageIdSubscribers(authV1, d.Get("page_id").(string)).PostPagesPageIdSubscribers(o).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to create subscriber using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to create subscriber using Status Page API")
 	}
 
 	d.SetId(result.GetId())
@@ -71,12 +67,10 @@ func resourceSubscriberDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	providerConf.Ratelimiter.Wait(authV1) // This is a blocking call. Honors the rate limit
-
 	_, _, err := statuspageClientV1.SubscribersApi.DeletePagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err.Error() != "" {
-		return translateClientError(err, "failed to delete subscriber using Status Page API")
+		return TranslateClientErrorDiag(err, "failed to delete subscriber using Status Page API")
 	}
 
 	return nil

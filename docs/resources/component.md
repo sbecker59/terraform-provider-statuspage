@@ -44,4 +44,8 @@ resource "statuspage_component" "my_component" {
 - **start_date** (String) Should this component be showcased
 - **status** (String)
 
+### Read-Only
+
+- **automation_email** (String)
+
 
