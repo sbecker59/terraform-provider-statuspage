@@ -58,6 +58,7 @@ Optional:
 
 Read-Only:
 
+- **automation_email** (String)
 - **description** (String)
 - **group_id** (String)
 - **id** (String)
