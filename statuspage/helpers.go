@@ -43,3 +43,12 @@ func GenerateDataSourceHashID(idPrefix string, resourceSchema *schema.Resource, 
 	}
 	return fmt.Sprintf("%s%d", idPrefix, hashcode.String(buf.String()))
 }
+
+func StringListFromSchemaKey(d *schema.ResourceData, key string) []string {
+	values := d.Get(key).(*schema.Set).List()
+	v := make([]string, len(values))
+	for i, e := range values {
+		v[i] = fmt.Sprint(e)
+	}
+	return v
+}
