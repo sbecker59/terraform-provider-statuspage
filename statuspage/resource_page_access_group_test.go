@@ -66,7 +66,7 @@ func testAccCheckPageAccessGroupConfig(rand int) string {
 		users       = ["${statuspage_page_access_user.user_1.id}"]
 		components  = ["${statuspage_component.component_1.id}"]
 	}
-	`, rand, pageID)
+	`, rand, audienceSpecificPageID)
 }
 
 func testAccCheckPageAccessGroupConfigUpdated(rand int) string {
@@ -103,7 +103,7 @@ func testAccCheckPageAccessGroupConfigUpdated(rand int) string {
 		users       = ["${statuspage_page_access_user.user_1.id}", "${statuspage_page_access_user.user_2.id}"]
 		components  = ["${statuspage_component.component_1.id}", "${statuspage_component.component_2.id}"]
 	}
-	`, rand, pageID)
+	`, rand, audienceSpecificPageID)
 }
 
 func testAccCheckStatuspagePageAccessGroupDestroy(s *terraform.State) error {
@@ -114,7 +114,7 @@ func testAccCheckStatuspagePageAccessGroupDestroy(s *terraform.State) error {
 
 	for _, r := range s.RootModule().Resources {
 
-		_, httpresp, err := statuspageClientV1.PageAccessGroupsApi.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, pageID, r.Primary.ID).Execute()
+		_, httpresp, err := statuspageClientV1.PageAccessGroupsApi.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
 		if err.Error() != "" {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue

@@ -55,7 +55,7 @@ func testAccCheckPageAccessUserConfig(rand int) string {
 		page_id     = "${var.pageid}"
 		email       = "${var.email}"
 	}
-	`, rand, pageID, paEmail)
+	`, rand, audienceSpecificPageID, paEmail)
 }
 
 func testAccCheckPageAccessUserConfigUpdated(rand int) string {
@@ -73,7 +73,7 @@ func testAccCheckPageAccessUserConfigUpdated(rand int) string {
 		page_id     = "${var.pageid}"
 		email       = "new_${var.email}"
 	}
-	`, rand, pageID, paEmail)
+	`, rand, audienceSpecificPageID, paEmail)
 }
 
 func testAccCheckStatuspagePageAccessUserDestroy(s *terraform.State) error {
@@ -84,7 +84,7 @@ func testAccCheckStatuspagePageAccessUserDestroy(s *terraform.State) error {
 
 	for _, r := range s.RootModule().Resources {
 
-		_, httpresp, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsersPageAccessUserId(authV1, pageID, r.Primary.ID).Execute()
+		_, httpresp, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsersPageAccessUserId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
 		if err.Error() != "" {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue
