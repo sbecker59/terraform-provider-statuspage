@@ -14,9 +14,10 @@ import (
 )
 
 var (
-	testAccProviders map[string]*schema.Provider
-	testAccProvider  *schema.Provider
-	pageID           string
+	testAccProviders       map[string]*schema.Provider
+	testAccProvider        *schema.Provider
+	pageID                 string
+	audienceSpecificPageID string
 )
 
 func init() {
@@ -25,6 +26,7 @@ func init() {
 		"statuspage": testAccProvider,
 	}
 	pageID = os.Getenv("STATUSPAGE_PAGE_ID")
+	audienceSpecificPageID = os.Getenv("STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID")
 }
 
 func isDebug() bool {
@@ -43,6 +45,13 @@ func isAPIKeySet() bool {
 
 func isPageIdSet() bool {
 	if os.Getenv("STATUSPAGE_PAGE_ID") != "" {
+		return true
+	}
+	return false
+}
+
+func isAudienceSpecificPageIdSet() bool {
+	if os.Getenv("STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID") != "" {
 		return true
 	}
 	return false
@@ -70,6 +79,9 @@ func testAccPreCheck(t *testing.T) {
 	}
 	if !isPageIdSet() {
 		t.Fatal("STATUSPAGE_PAGE_ID must be set for acceptance tests")
+	}
+	if !isAudienceSpecificPageIdSet() {
+		t.Fatal("STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID must be set for acceptance tests")
 	}
 	if !isDatadogApiKeySet() {
 		t.Fatal("DD_API_KEY must be set for acceptance tests")
