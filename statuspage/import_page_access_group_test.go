@@ -9,14 +9,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func testAccStatuspagePageAccessGroup_import(t *testing.T) {
+func TestAccStatuspagePageAccessGroup_import(t *testing.T) {
 	resourceName := "statuspage_page_access_group.default"
 	rid := acctest.RandIntRange(1, 99)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckStatuspageComponentDestroy,
+		CheckDestroy: testAccCheckStatuspagePageAccessGroupDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccStatuspagePageAccessGroupConfigImported(rid),
