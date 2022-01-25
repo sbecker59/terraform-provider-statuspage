@@ -43,6 +43,7 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"statuspage_component_groups": dataSourceComponentGroups(),
 			"statuspage_components":       dataSourceComponents(),
+			"statuspage_pages":       	   dataSourcePages(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
