@@ -3,7 +3,6 @@ module github.com/sbecker59/terraform-provider-statuspage
 go 1.16
 
 require (
-	github.com/apex/log v1.9.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-hclog v1.1.0
 	github.com/hashicorp/terraform-plugin-docs v0.5.1
