@@ -1,8 +1,6 @@
 package statuspage
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -54,50 +52,17 @@ func dataSourcePagesRead(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 	page_name := d.Get("page_name").(string)
 
-	fmt.Printf(page_name)
-	// res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Execute()
 	req := statuspageClientV1.PagesApi.GetPages(authV1)
 
 	res,_,_  := req.Execute()
 
-	
-
-	// if err.Error() != "" {
-	// 	return TranslateClientErrorDiag(err, "error querying component list")
-	// }
-
-	// d.SetId(GenerateDataSourceHashID("DataSourcePages-", dataSourcePages(), d))
-	resources := []map[string]interface{}{}
-
 	for _, r := range res  {
-		
-
-	
 		if _, ok := r.GetNameOk(); ok  {
 			if r.GetName() == page_name{
 				d.SetId(r.GetId())
-				// pages["id"] = r.GetId()
-				// pages["name"] = r.GetName()
-				// resources = append(resources, pages)
 				break
-			} 
-			
-			
-
-
-			
+			}
 		}
-		
-
 	}
-
-	if f, fOk := d.GetOkExists("filter"); fOk {
-		resources = ApplyFilters(f.(*schema.Set), resources, dataSourcePages().Schema["pages"].Elem.(*schema.Resource).Schema)
-	}
-
-	// if err := d.Set("pages", resources); err != nil {
-	// 	return err
-	// }
-
 	return nil
 }
