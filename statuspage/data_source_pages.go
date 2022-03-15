@@ -18,29 +18,6 @@ func dataSourcePages() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			// Computed values
-			// "pages": {
-			// 	Type:     schema.TypeList,
-			// 	Computed: true,
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			// Required
-
-			// 			// Optional
-
-			// 			// Computed
-			// 			"id": {
-			// 				Type:     schema.TypeString,
-			// 				Computed: true,
-			// 			},
-			// 			"name": {
-			// 				Type:     schema.TypeString,
-			// 				Computed: true,
-			// 			},
-						
-			// 		},
-			// 	},
-			// },
 		},
 	}
 }
