@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
       - name: Restore Go cache
         uses: actions/cache@v2.1.7
         with:
@@ -31,6 +31,7 @@ jobs:
           STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID: ${{ secrets.STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID }}
           DD_API_KEY : ${{ secrets.DD_API_KEY }}
           DD_APP_KEY : ${{ secrets.DD_APP_KEY }}
+          STATUSPAGE_PAGE_NAME : ${{ secrets.STATUSPAGE_PAGE_NAME }}
         run: |
           make cover
 
