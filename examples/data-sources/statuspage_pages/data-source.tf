@@ -1,4 +1,3 @@
 data "statuspage_pages" "default" {
-  page_id = local.page_name
+  page_name = local.page_name
 }
-
