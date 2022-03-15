@@ -29,13 +29,15 @@ func dataSourcePagesRead(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 	page_name := d.Get("page_name").(string)
 
-	req := statuspageClientV1.PagesApi.GetPages(authV1)
+	res, _, err := statuspageClientV1.PagesApi.GetPages(authV1).Execute()
 
-	res,_,_  := req.Execute()
+	if err.Error() != "" {
+		return TranslateClientErrorDiag(err, "error querying pages list")
+	}
 
-	for _, r := range res  {
-		if _, ok := r.GetNameOk(); ok  {
-			if r.GetName() == page_name{
+	for _, r := range res {
+		if _, ok := r.GetNameOk(); ok {
+			if r.GetName() == page_name {
 				d.SetId(r.GetId())
 				break
 			}
