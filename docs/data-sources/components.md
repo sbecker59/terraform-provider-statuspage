@@ -29,28 +29,28 @@ data "statuspage_components" "default" {
 
 ### Required
 
-- **page_id** (String) the ID of the page this component belongs to
+- `page_id` (String) the ID of the page this component belongs to
 
 ### Optional
 
-- **filter** (Block Set) (see [below for nested schema](#nestedblock--filter))
-- **id** (String) The ID of this resource.
+- `filter` (Block Set) (see [below for nested schema](#nestedblock--filter))
 
 ### Read-Only
 
-- **components** (List of Object) (see [below for nested schema](#nestedatt--components))
+- `components` (List of Object) (see [below for nested schema](#nestedatt--components))
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--filter"></a>
 ### Nested Schema for `filter`
 
 Required:
 
-- **name** (String)
-- **values** (List of String)
+- `name` (String)
+- `values` (List of String)
 
 Optional:
 
-- **regex** (Boolean)
+- `regex` (Boolean)
 
 
 <a id="nestedatt--components"></a>
@@ -58,11 +58,11 @@ Optional:
 
 Read-Only:
 
-- **automation_email** (String)
-- **description** (String)
-- **group_id** (String)
-- **id** (String)
-- **name** (String)
-- **position** (Number)
+- `automation_email` (String)
+- `description` (String)
+- `group_id` (String)
+- `id` (String)
+- `name` (String)
+- `position` (Number)
 
 

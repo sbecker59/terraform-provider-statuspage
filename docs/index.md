@@ -29,4 +29,4 @@ provider "statuspage" {}
 
 ### Optional
 
-- **api_key** (String)
+- `api_key` (String)

@@ -24,12 +24,15 @@ resource "statuspage_subscriber" "my_subscriber" {
 
 ### Required
 
-- **page_id** (String) the ID of the page this component belongs to
+- `page_id` (String) the ID of the page this component belongs to
 
 ### Optional
 
-- **email** (String) the email address for creating Email and Webhook subscribers
-- **endpoint** (String) The endpoint URI for creating Webhook subscribers
-- **id** (String) The ID of this resource.
+- `email` (String) the email address for creating Email and Webhook subscribers
+- `endpoint` (String) The endpoint URI for creating Webhook subscribers
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

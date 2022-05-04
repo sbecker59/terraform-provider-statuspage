@@ -23,23 +23,26 @@ data "statuspage_pages" "default" {
 
 ### Required
 
-- **page_name** (String) the name of the page to
+- `page_name` (String) the name of the page to
 
 ### Optional
 
-- **filter** (Block Set) (see [below for nested schema](#nestedblock--filter))
-- **id** (String) The ID of this resource.
+- `filter` (Block Set) (see [below for nested schema](#nestedblock--filter))
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--filter"></a>
 ### Nested Schema for `filter`
 
 Required:
 
-- **name** (String)
-- **values** (List of String)
+- `name` (String)
+- `values` (List of String)
 
 Optional:
 
-- **regex** (Boolean)
+- `regex` (Boolean)
 
 

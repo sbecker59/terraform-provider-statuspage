@@ -44,15 +44,18 @@ resource "statuspage_page_access_group" "my_user_group" {
 
 ### Required
 
-- **name** (String) Name for this Group.
-- **page_id** (String) the ID of the page this component group belongs to
+- `name` (String) Name for this Group.
+- `page_id` (String) the ID of the page this component group belongs to
 
 ### Optional
 
-- **components** (Set of String) An array with the IDs of the components in this group
-- **external_identifier** (String) Associates group with external group
-- **id** (String) The ID of this resource.
-- **metrics** (Set of String) An array with the IDs of the metrics in this group
-- **users** (Set of String) An array with the Page Access User IDs that are in this group
+- `components` (Set of String) An array with the IDs of the components in this group
+- `external_identifier` (String) Associates group with external group
+- `metrics` (Set of String) An array with the IDs of the metrics in this group
+- `users` (Set of String) An array with the Page Access User IDs that are in this group
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

@@ -57,30 +57,33 @@ resource "statuspage_incident" "my_incident" {
 
 ### Required
 
-- **name** (String) Incident Name
-- **page_id** (String) the ID of the page this component belongs to
+- `name` (String) Incident Name
+- `page_id` (String) the ID of the page this component belongs to
 
 ### Optional
 
-- **body** (String) The initial message, created as the first incident update
-- **component** (Block Set) List of component_ids affected by this incident (see [below for nested schema](#nestedblock--component))
-- **id** (String) The ID of this resource.
-- **impact_override** (String) value to override calculated impact value
-- **scheduled_auto_completed** (Boolean)
-- **scheduled_auto_in_progress** (Boolean)
-- **scheduled_remind_prior** (Boolean)
-- **status** (String) The incident status. For realtime incidents, valid values are investigating, identified, monitoring, and resolved. For scheduled incidents, valid values are scheduled, in_progress, verifying, and completed.
+- `body` (String) The initial message, created as the first incident update
+- `component` (Block Set) List of component_ids affected by this incident (see [below for nested schema](#nestedblock--component))
+- `impact_override` (String) value to override calculated impact value
+- `scheduled_auto_completed` (Boolean)
+- `scheduled_auto_in_progress` (Boolean)
+- `scheduled_remind_prior` (Boolean)
+- `status` (String) The incident status. For realtime incidents, valid values are investigating, identified, monitoring, and resolved. For scheduled incidents, valid values are scheduled, in_progress, verifying, and completed.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--component"></a>
 ### Nested Schema for `component`
 
 Required:
 
-- **id** (String) Identifier for component
-- **name** (String) Display name for component
+- `id` (String) Identifier for component
+- `name` (String) Display name for component
 
 Optional:
 
-- **status** (String) Status of component
+- `status` (String) Status of component
 
 

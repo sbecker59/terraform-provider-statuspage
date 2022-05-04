@@ -17,17 +17,20 @@ description: |-
 
 ### Required
 
-- **page_id** (String) the ID of the page this component group belongs to
-- **type** (String) One of 'Pingdom', 'NewRelic', 'Librato', 'Datadog', or 'Self'
+- `page_id` (String) the ID of the page this component group belongs to
+- `type` (String) One of 'Pingdom', 'NewRelic', 'Librato', 'Datadog', or 'Self'
 
 ### Optional
 
-- **api_key** (String, Sensitive) Required by the Datadog and NewRelic type metrics providers
-- **api_token** (String, Sensitive) Required by the Librato, Pingdom and Datadog type metrics providers
-- **application_key** (String, Sensitive) Required by the Pingdom-type metrics provider
-- **email** (String) Required by the Librato and Pingdom type metrics providers
-- **id** (String) The ID of this resource.
-- **metric_base_uri** (String) Required by the NewRelic-type metrics provider
-- **password** (String, Sensitive) Required by the Pingdom-type metrics provider
+- `api_key` (String, Sensitive) Required by the Datadog and NewRelic type metrics providers
+- `api_token` (String, Sensitive) Required by the Librato, Pingdom and Datadog type metrics providers
+- `application_key` (String, Sensitive) Required by the Pingdom-type metrics provider
+- `email` (String) Required by the Librato and Pingdom type metrics providers
+- `metric_base_uri` (String) Required by the NewRelic-type metrics provider
+- `password` (String, Sensitive) Required by the Pingdom-type metrics provider
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 
