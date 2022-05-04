@@ -32,20 +32,20 @@ resource "statuspage_component" "my_component" {
 
 ### Required
 
-- **name** (String) Display Name for the component
-- **page_id** (String) the ID of the page this component belongs to
+- `name` (String) Display Name for the component
+- `page_id` (String) the ID of the page this component belongs to
 
 ### Optional
 
-- **description** (String) More detailed description for the component
-- **id** (String) The ID of this resource.
-- **only_show_if_degraded** (Boolean)
-- **showcase** (Boolean) Should this component be shown component only if in degraded state
-- **start_date** (String) Should this component be showcased
-- **status** (String)
+- `description` (String) More detailed description for the component
+- `only_show_if_degraded` (Boolean)
+- `showcase` (Boolean) Should this component be shown component only if in degraded state
+- `start_date` (String) Should this component be showcased
+- `status` (String)
 
 ### Read-Only
 
-- **automation_email** (String)
+- `automation_email` (String)
+- `id` (String) The ID of this resource.
 
 

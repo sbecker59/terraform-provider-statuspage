@@ -42,4 +42,5 @@ cover:
 
 .PHONY: docs
 docs:
-	tfplugindocs generate
+	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+

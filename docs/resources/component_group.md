@@ -26,13 +26,16 @@ resource "statuspage_component_group" "my_group" {
 
 ### Required
 
-- **components** (Set of String) An array with the IDs of the components in this group
-- **name** (String) An array with the IDs of the components in this group
-- **page_id** (String) the ID of the page this component group belongs to
+- `components` (Set of String) An array with the IDs of the components in this group
+- `name` (String) An array with the IDs of the components in this group
+- `page_id` (String) the ID of the page this component group belongs to
 
 ### Optional
 
-- **description** (String) More detailed description for this component group
-- **id** (String) The ID of this resource.
+- `description` (String) More detailed description for this component group
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

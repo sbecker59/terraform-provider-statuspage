@@ -24,11 +24,11 @@ resource "statuspage_page_access_user" "my_user" {
 
 ### Required
 
-- **email** (String) The email of the user
-- **page_id** (String) the ID of the page this user belongs to
+- `email` (String) The email of the user
+- `page_id` (String) the ID of the page this user belongs to
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 
