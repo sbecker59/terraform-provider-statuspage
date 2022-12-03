@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Restore Go cache
-        uses: actions/cache@v3.0.5
+        uses: actions/cache@v3.0.11
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -36,6 +36,6 @@ jobs:
           make cover
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.0
+        uses: codecov/codecov-action@v3.1.
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
