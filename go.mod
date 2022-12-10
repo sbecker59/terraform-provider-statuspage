@@ -10,6 +10,8 @@ require (
 	github.com/sbecker59/statuspage-api-client-go v0.0.0-20220616165118-c6e2039f9a03
 )
 
+replace golang.org/x/net => golang.org/x/net v0.4.0
+
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
