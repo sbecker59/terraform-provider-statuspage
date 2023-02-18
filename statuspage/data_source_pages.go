@@ -31,7 +31,7 @@ func dataSourcePagesRead(d *schema.ResourceData, m interface{}) error {
 
 	res, _, err := statuspageClientV1.PagesApi.GetPages(authV1).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "error querying pages list")
 	}
 

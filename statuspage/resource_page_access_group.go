@@ -19,7 +19,7 @@ func resourcePageAccessGroupRead(d *schema.ResourceData, m interface{}) error {
 
 	pageAccessGroups, _, err := statuspageClientV1.PageAccessGroupsApi.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get component groups using Status Page API")
 	}
 
@@ -60,7 +60,7 @@ func resourcePageAccessGroupCreate(d *schema.ResourceData, m interface{}) error 
 	log.Printf("[INFO] Creating Status Page componant groups '%s'", name)
 	resp, _, err := statuspageClientV1.PageAccessGroupsApi.PostPagesPageIdPageAccessGroups(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessGroups(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create component groups using Status Page API")
 	}
 
@@ -93,7 +93,7 @@ func resourcePageAccessGroupUpdate(d *schema.ResourceData, m interface{}) error 
 	log.Printf("[INFO] Update Status Page componant group '%s'", name)
 	resp, _, err := statuspageClientV1.PageAccessGroupsApi.PatchPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdPageAccessGroups(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update component group using Status Page API")
 	}
 
@@ -109,7 +109,7 @@ func resourcePageAccessGroupDelete(d *schema.ResourceData, m interface{}) error 
 
 	_, _, err := statuspageClientV1.PageAccessGroupsApi.DeletePagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete page access group using Status Page API")
 	}
 

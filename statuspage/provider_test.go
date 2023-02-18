@@ -2,22 +2,19 @@ package statuspage
 
 import (
 	"errors"
-	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
-	retryablehttp "github.com/sbecker59/terraform-provider-statuspage/statuspage/internal/go-retryablehttp"
 )
 
 var (
 	testAccProviders       map[string]*schema.Provider
 	testAccProvider        *schema.Provider
 	pageID                 string
-	pageName			   string
+	pageName               string
 	audienceSpecificPageID string
 )
 
@@ -46,38 +43,23 @@ func isAPIKeySet() bool {
 }
 
 func isPageIdSet() bool {
-	if os.Getenv("STATUSPAGE_PAGE_ID") != "" {
-		return true
-	}
-	return false
+	return os.Getenv("STATUSPAGE_PAGE_ID") != ""
 }
 
 func isPageNameSet() bool {
-	if os.Getenv("STATUSPAGE_PAGE_NAME") != "" {
-		return true
-	}
-	return false
+	return os.Getenv("STATUSPAGE_PAGE_NAME") != ""
 }
 
 func isAudienceSpecificPageIdSet() bool {
-	if os.Getenv("STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID") != "" {
-		return true
-	}
-	return false
+	return os.Getenv("STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID") != ""
 }
 
 func isDatadogApiKeySet() bool {
-	if os.Getenv("DD_API_KEY") != "" {
-		return true
-	}
-	return false
+	return os.Getenv("DD_API_KEY") != ""
 }
 
 func isDatadogAppKeySet() bool {
-	if os.Getenv("DD_APP_KEY") != "" {
-		return true
-	}
-	return false
+	return os.Getenv("DD_APP_KEY") != ""
 }
 
 // testAccPreCheck validates the necessary test API keys exist
@@ -101,14 +83,6 @@ func testAccPreCheck(t *testing.T) {
 	if !isDatadogAppKeySet() {
 		t.Fatal("DD_APP_KEY must be set for acceptance tests")
 	}
-}
-
-func buildStatuspageClientV1(httpClient *http.Client) *sp.APIClient {
-	configV1 := sp.NewConfiguration()
-	configV1.Debug = isDebug()
-	configV1.HTTPClient = retryablehttp.NewClient().StandardClient()
-	configV1.UserAgent = getUserAgent(configV1.UserAgent)
-	return sp.NewAPIClient(configV1)
 }
 
 func TestProvider(t *testing.T) {

@@ -14,7 +14,7 @@ func resourceSubscriberRead(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 
 	resp, _, err := statuspageClientV1.SubscribersApi.GetPagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get component groups using Status Page API")
 	}
 
@@ -51,7 +51,7 @@ func resourceSubscriberCreate(d *schema.ResourceData, m interface{}) error {
 
 	result, _, err := statuspageClientV1.SubscribersApi.PostPagesPageIdSubscribers(authV1, d.Get("page_id").(string)).PostPagesPageIdSubscribers(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create subscriber using Status Page API")
 	}
 
@@ -69,7 +69,7 @@ func resourceSubscriberDelete(d *schema.ResourceData, m interface{}) error {
 
 	_, _, err := statuspageClientV1.SubscribersApi.DeletePagesPageIdSubscribersSubscriberId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete subscriber using Status Page API")
 	}
 

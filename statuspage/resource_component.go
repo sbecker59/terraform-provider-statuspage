@@ -20,7 +20,7 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
 	component, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get component using Status Page API")
 	}
 
@@ -68,7 +68,7 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 
 	log.Printf("[INFO] Creating Status Page componant '%s'", name)
 	result, _, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create component using Status Page API")
 	}
 
@@ -106,7 +106,7 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 
 	log.Printf("[INFO] Update Status Page componant '%s'", name)
 	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update component using Status Page API")
 	}
 
@@ -121,7 +121,7 @@ func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 
 	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
 	}
 
