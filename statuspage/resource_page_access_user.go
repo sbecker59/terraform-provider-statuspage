@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 )
 
 func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
@@ -17,7 +17,7 @@ func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
 	email := d.Get("email").(string)
 	log.Printf("[INFO] Looking up user by email '%s'", email)
 
-	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Execute()
+	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
 	if err.Error() != "" {
 		return TranslateClientErrorDiag(err, "failed to get page access users using Status Page API")

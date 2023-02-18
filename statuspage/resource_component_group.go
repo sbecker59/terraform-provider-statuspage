@@ -53,10 +53,10 @@ func resourceComponentGroupCreate(d *schema.ResourceData, m interface{}) error {
 	var componentGroup sp.PostPagesPageIdComponentGroupsComponentGroup
 
 	componentGroup.SetName(name)
-	componentGroup.SetDescription(description)
 	componentGroup.SetComponents(c)
 
 	o := *sp.NewPostPagesPageIdComponentGroups()
+	o.SetDescription(description)
 	o.SetComponentGroup(componentGroup)
 
 	log.Printf("[INFO] Creating Status Page componant groups '%s'", name)
@@ -90,11 +90,11 @@ func resourceComponentGroupUpdate(d *schema.ResourceData, m interface{}) error {
 	var componentGroup sp.PostPagesPageIdComponentGroupsComponentGroup
 
 	componentGroup.SetName(name)
-	componentGroup.SetDescription(description)
 	componentGroup.SetComponents(c)
 
 	o := *sp.NewPatchPagesPageIdComponentGroups()
 	o.SetComponentGroup(componentGroup)
+	o.SetDescription(description)
 
 	log.Printf("[INFO] Update Status Page componant group '%s'", name)
 	resp, _, err := statuspageClientV1.ComponentGroupsApi.PatchPagesPageIdComponentGroupsId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponentGroups(o).Execute()

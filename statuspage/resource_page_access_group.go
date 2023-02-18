@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 )
 
 func resourcePageAccessGroupRead(d *schema.ResourceData, m interface{}) error {
@@ -158,12 +158,12 @@ func resourcePageAccessGroup() *schema.Resource {
 			"external_identifier": {
 				Type:        schema.TypeString,
 				Description: "Associates group with external group",
-				Optional: 	 true,
+				Optional:    true,
 			},
 			"components": {
 				Type:        schema.TypeSet,
 				Description: "An array with the IDs of the components in this group",
-				Optional: 	 true,
+				Optional:    true,
 				Set:         schema.HashString,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -172,7 +172,7 @@ func resourcePageAccessGroup() *schema.Resource {
 			"metrics": {
 				Type:        schema.TypeSet,
 				Description: "An array with the IDs of the metrics in this group",
-				Optional: 	 true,
+				Optional:    true,
 				Set:         schema.HashString,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -181,7 +181,7 @@ func resourcePageAccessGroup() *schema.Resource {
 			"users": {
 				Type:        schema.TypeSet,
 				Description: "An array with the Page Access User IDs that are in this group",
-				Optional: 	 true,
+				Optional:    true,
 				Set:         schema.HashString,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,

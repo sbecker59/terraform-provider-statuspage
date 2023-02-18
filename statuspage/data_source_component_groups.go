@@ -65,7 +65,7 @@ func dataSourceComponentGroupsRead(d *schema.ResourceData, m interface{}) error 
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	res, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).Execute()
+	res, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
 	if err.Error() != "" {
 		return TranslateClientErrorDiag(err, "error querying component group list")
