@@ -20,7 +20,7 @@ func resourceIncidentRead(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[INFO] Reading Status Page incident '%s'", name)
 
 	incident, _, err := statuspageClientV1.IncidentsApi.GetPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get incident using Status Page API")
 	}
 
@@ -37,7 +37,7 @@ func resourceIncidentRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("scheduled_auto_in_progress", incident.GetScheduledAutoInProgress())
 	d.Set("scheduled_auto_completed", incident.GetScheduledAutoCompleted())
 
-	components := make([]interface{}, len(incident.GetComponents()), len(incident.GetComponents()))
+	components := make([]interface{}, len(incident.GetComponents()))
 	for i, statuspage_component := range incident.GetComponents() {
 		component := make(map[string]interface{})
 		component["id"] = statuspage_component.GetId()
@@ -101,7 +101,7 @@ func resourceIncidentCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[INFO] Creating Status Page incident '%s'", name)
 	result, _, err := statuspageClientV1.IncidentsApi.PostPagesPageIdIncidents(authV1, d.Get("page_id").(string)).PostPagesPageIdIncidents(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create incident using Status Page API")
 	}
 
@@ -162,7 +162,7 @@ func resourceIncidentUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[INFO] Update Status Page incident '%s'", name)
 	result, _, err := statuspageClientV1.IncidentsApi.PatchPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdIncidents(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update incident using Status Page API")
 	}
 
@@ -178,7 +178,7 @@ func resourceIncidentDelete(d *schema.ResourceData, m interface{}) error {
 
 	_, _, err := statuspageClientV1.IncidentsApi.DeletePagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete incident using Status Page API")
 	}
 

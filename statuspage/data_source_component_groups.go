@@ -65,9 +65,9 @@ func dataSourceComponentGroupsRead(d *schema.ResourceData, m interface{}) error 
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	res, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).Execute()
+	res, _, err := statuspageClientV1.ComponentGroupsApi.GetPagesPageIdComponentGroups(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "error querying component group list")
 	}
 
@@ -88,7 +88,7 @@ func dataSourceComponentGroupsRead(d *schema.ResourceData, m interface{}) error 
 		resources = append(resources, componentGroup)
 	}
 
-	if f, fOk := d.GetOkExists("filter"); fOk {
+	if f, fOk := d.GetOk("filter"); fOk {
 		resources = ApplyFilters(f.(*schema.Set), resources, dataSourceComponentGroups().Schema["component_groups"].Elem.(*schema.Resource).Schema)
 	}
 

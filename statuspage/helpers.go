@@ -37,7 +37,7 @@ func GenerateDataSourceHashID(idPrefix string, resourceSchema *schema.Resource, 
 			continue
 		}
 
-		if element, ok := resourceData.GetOkExists(key); ok {
+		if element, ok := resourceData.GetOk(key); ok {
 			buf.WriteString(fmt.Sprintf("%v-", element))
 		}
 	}

@@ -705,8 +705,8 @@ func Test_checkAndConvertNestedStructure(t *testing.T) {
 	m = append(m, map[string]interface{}{"key1": "value1"})
 
 	var m1 []interface{}
-	m1 = append(m, map[string]interface{}{"key1": "value1"})
-	m1 = append(m, map[string]interface{}{"key2": "value2"})
+	m1 = append(m1, map[string]interface{}{"key1": "value1"})
+	m1 = append(m1, map[string]interface{}{"key2": "value2"})
 
 	type args struct {
 		element interface{}

@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sp "github.com/sbecker59/statuspage-api-client-go/api/v1/statuspage"
 )
 
 func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
@@ -17,9 +17,9 @@ func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
 	email := d.Get("email").(string)
 	log.Printf("[INFO] Looking up user by email '%s'", email)
 
-	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Execute()
+	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get page access users using Status Page API")
 	}
 
@@ -58,7 +58,7 @@ func resourcePageAccessUserCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[INFO] Creating Status Page access user '%s'", email)
 	resp, _, err := statuspageClientV1.PageAccessUsersApi.PostPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessUsers(o).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create page access user using Status Page API")
 	}
 
@@ -75,7 +75,7 @@ func resourcePageAccessUserDelete(d *schema.ResourceData, m interface{}) error {
 
 	_, err := statuspageClientV1.PageAccessUsersApi.DeletePagesPageIdPageAccessUsersPageAccessUserId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete page access user using Status Page API")
 	}
 

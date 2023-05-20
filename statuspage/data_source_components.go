@@ -66,9 +66,9 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Execute()
+	res, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponents(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
-	if err.Error() != "" {
+	if err != nil {
 		return TranslateClientErrorDiag(err, "error querying component list")
 	}
 
@@ -91,7 +91,7 @@ func dataSourceComponentsRead(d *schema.ResourceData, m interface{}) error {
 
 	}
 
-	if f, fOk := d.GetOkExists("filter"); fOk {
+	if f, fOk := d.GetOk("filter"); fOk {
 		resources = ApplyFilters(f.(*schema.Set), resources, dataSourceComponents().Schema["components"].Elem.(*schema.Resource).Schema)
 	}
 
