@@ -29,11 +29,9 @@ func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	for _, u := range pageAccessUsers {
-		if email == *u.Email {
-			d.SetId(*u.Id)
-			break
-		} else {
-			d.SetId("")
+		if d.Id() == u.GetId() {
+			d.SetId(u.GetId())
+			d.Set("email", u.GetEmail())
 		}
 	}
 
@@ -84,16 +82,16 @@ func resourcePageAccessUserDelete(d *schema.ResourceData, m interface{}) error {
 
 func resourcePageAccessUserImport(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 	if len(strings.Split(d.Id(), "/")) != 2 {
-		return []*schema.ResourceData{}, fmt.Errorf("[ERROR] Invalid resource format: %s. Please use 'page-id/email-address'", d.Id())
+		return []*schema.ResourceData{}, fmt.Errorf("[ERROR] Invalid resource format: %s. Please use 'page-id/email-id'", d.Id())
 	}
 
 	pageID := strings.Split(d.Id(), "/")[0]
-	email := strings.Split(d.Id(), "/")[1]
+	emailID := strings.Split(d.Id(), "/")[1]
 
-	log.Printf("[INFO] Importing Page Access User %s from Page %s", email, pageID)
+	log.Printf("[INFO] Importing Page Access User %s from Page %s", emailID, pageID)
 
 	d.Set("page_id", pageID)
-	d.Set("email", email)
+	d.SetId(emailID)
 
 	err := resourcePageAccessUserRead(d, m)
 
