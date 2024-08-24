@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/hashicorp/go-cleanhttp v0.5.2
-	github.com/hashicorp/go-hclog v1.6.3
+	github.com/hashicorp/go-retryablehttp v0.7.7
 	github.com/hashicorp/terraform-plugin-docs v0.19.4
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	github.com/sbecker59/statuspage-api-client-go v0.0.0-20240824085712-bc4d957c958f
@@ -37,9 +37,9 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-checkpoint v0.5.0 // indirect
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320 // indirect
+	github.com/hashicorp/go-hclog v1.6.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-plugin v1.6.1 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.7 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/hashicorp/hc-install v0.8.0 // indirect
@@ -87,6 +87,7 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240823204242-4ba0660f739c // indirect
 	google.golang.org/grpc v1.65.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
