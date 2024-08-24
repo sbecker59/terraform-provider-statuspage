@@ -34,5 +34,3 @@ resource "statuspage_subscriber" "my_subscriber" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-

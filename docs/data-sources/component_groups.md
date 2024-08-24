@@ -63,5 +63,3 @@ Read-Only:
 - `id` (String)
 - `name` (String)
 - `position` (Number)
-
-

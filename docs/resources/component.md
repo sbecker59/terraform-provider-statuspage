@@ -47,5 +47,3 @@ resource "statuspage_component" "my_component" {
 
 - `automation_email` (String)
 - `id` (String) The ID of this resource.
-
-

@@ -85,5 +85,3 @@ Required:
 Optional:
 
 - `status` (String) Status of component
-
-
