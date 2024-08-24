@@ -37,5 +37,3 @@ resource "statuspage_component_group" "my_group" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-

@@ -30,5 +30,3 @@ resource "statuspage_page_access_user" "my_user" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-

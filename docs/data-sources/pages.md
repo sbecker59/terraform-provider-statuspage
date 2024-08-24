@@ -44,5 +44,3 @@ Required:
 Optional:
 
 - `regex` (Boolean)
-
-

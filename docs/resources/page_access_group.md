@@ -57,5 +57,3 @@ resource "statuspage_page_access_group" "my_user_group" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-
