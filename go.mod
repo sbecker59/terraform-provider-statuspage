@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/hashicorp/terraform-plugin-docs v0.25.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
-	github.com/sbecker59/statuspage-api-client-go v0.0.0-20240824085712-bc4d957c958f
+	github.com/sbecker59/statuspage-api-client-go v0.0.0-20260801080250-89a9015ed7c9
 )
 
 replace (
