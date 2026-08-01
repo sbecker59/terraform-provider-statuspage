@@ -7,6 +7,11 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
   - package-ecosystem: "gomod"
     directory: "/"
     ignore:
@@ -14,3 +19,8 @@ updates:
       - dependency-name: "google.golang.org/grpc"
     schedule:
       interval: "daily"
+    groups:
+      dependencies:
+        dependency-type: "production"
+        patterns:
+          - "*"
