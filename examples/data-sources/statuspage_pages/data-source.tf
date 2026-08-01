@@ -1,3 +1,3 @@
-data "statuspage_pages" "default" {
-  page_name = local.page_name
+data "statuspage_pages" "my_page" {
+  page_name = "My Status Page"
 }

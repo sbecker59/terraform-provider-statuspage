@@ -1,9 +1,8 @@
-data "statuspage_component_groups" "default" {
-    
-    page_id = local.page_id
+data "statuspage_component_groups" "all" {
+  page_id = "my_page_id"
 
-    filter {
-        name = "name"
-        values = [ "value_1", "value_2" ]
-    }
+  filter {
+    name   = "name"
+    values = ["My Product"]
+  }
 }
