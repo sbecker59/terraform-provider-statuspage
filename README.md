@@ -5,6 +5,7 @@
 ![release](https://github.com/sbecker59/terraform-provider-statuspage/workflows/release/badge.svg)
 [![codecov](https://codecov.io/gh/sbecker59/terraform-provider-statuspage/branch/main/graph/badge.svg?token=OalDkaUlvu)](https://codecov.io/gh/sbecker59/terraform-provider-statuspage)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/sbecker59/terraform-provider-statuspage)
+[![Context7](https://img.shields.io/badge/Context7-AI%20docs-black?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMSAxNHYtNEg3bDUtOHY0aDRsLTUgOHoiLz48L3N2Zz4=)](https://context7.com/sbecker59/terraform-provider-statuspage)
 
 Manage your [Atlassian Statuspage](https://www.atlassian.com/software/statuspage) resources with Terraform.  
 This provider lets you automate components, incidents, metrics, subscribers, and access control for any Statuspage page — fully declarative, version-controlled, and compatible with modern Terraform workflows.
