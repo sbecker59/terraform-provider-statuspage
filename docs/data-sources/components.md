@@ -13,14 +13,13 @@ description: |-
 ## Example Usage
 
 ```terraform
-data "statuspage_components" "default" {
-    
-    page_id = local.page_id
+data "statuspage_components" "web" {
+  page_id = "my_page_id"
 
-    filter {
-        name = "name"
-        values = [ "value_1", "value_2" ]
-    }
+  filter {
+    name   = "name"
+    values = ["API", "Dashboard"]
+  }
 }
 ```
 
