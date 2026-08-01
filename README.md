@@ -2,8 +2,11 @@
 # Terraform Provider for Atlassian Statuspage
 
 [![Terraform Registry](https://img.shields.io/badge/registry-sbecker59%2Fstatuspage-623CE4?logo=terraform)](https://registry.terraform.io/providers/sbecker59/statuspage/latest/docs)
+[![Registry Downloads](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.terraform.io%2Fv2%2Fproviders%2Fsbecker59%2Fstatuspage&query=%24.data.attributes.downloads&label=downloads&color=623CE4&logo=terraform)](https://registry.terraform.io/providers/sbecker59/statuspage/latest)
 ![release](https://github.com/sbecker59/terraform-provider-statuspage/workflows/release/badge.svg)
 [![codecov](https://codecov.io/gh/sbecker59/terraform-provider-statuspage/branch/main/graph/badge.svg?token=OalDkaUlvu)](https://codecov.io/gh/sbecker59/terraform-provider-statuspage)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sbecker59/terraform-provider-statuspage)](https://goreportcard.com/report/github.com/sbecker59/terraform-provider-statuspage)
+[![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/sbecker59/terraform-provider-statuspage)
 [![Context7](https://img.shields.io/badge/Context7-AI%20docs-black?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0tMSAxNHYtNEg3bDUtOHY0aDRsLTUgOHoiLz48L3N2Zz4=)](https://context7.com/sbecker59/terraform-provider-statuspage)
 
