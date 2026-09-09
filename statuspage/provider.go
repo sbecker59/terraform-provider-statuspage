@@ -39,6 +39,7 @@ func Provider() *schema.Provider {
 			"statuspage_subscriber":      resourceSubscriber(),
 			"statuspage_page_access_group": resourcePageAccessGroup(),
 			"statuspage_page_access_user": resourcePageAccessUser(),
+			"statuspage_page":             resourcePage(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"statuspage_component_groups": dataSourceComponentGroups(),
