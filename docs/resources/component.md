@@ -53,3 +53,14 @@ resource "statuspage_component" "my_component" {
 
 - `automation_email` (String)
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a component using the page ID and component ID.
+terraform import statuspage_component.api your_page_id/your_component_id
+```

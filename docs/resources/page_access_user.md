@@ -35,3 +35,14 @@ resource "statuspage_page_access_user" "bob" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a page access user using the page ID and email address.
+terraform import statuspage_page_access_user.alice your_page_id/alice@example.com
+```

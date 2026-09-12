@@ -103,3 +103,14 @@ Required:
 Optional:
 
 - `status` (String) Status of component
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import an incident using the page ID and incident ID.
+terraform import statuspage_incident.outage your_page_id/your_incident_id
+```
