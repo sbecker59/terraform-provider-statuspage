@@ -406,11 +406,17 @@ func TestAccStatuspagePage_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// Import first: there is no Create, so the only way in is import.
-				ResourceName:      "statuspage_page.this",
-				ImportState:       true,
-				ImportStateId:     testPageID,
-				ImportStateVerify: true,
-				Config:            testAccStatuspagePageConfig(testPageID, originalName),
+				// ImportStateVerify can't be used here: it diffs the imported state
+				// against a prior *applied* state, but nothing has ever been applied
+				// (Create always errors by design) — with nothing to compare against,
+				// the SDK reports "resource with ID ... not found" rather than a real
+				// mismatch. ImportStatePersist carries the imported state forward so
+				// the next step's Update has a resource to operate on.
+				ResourceName:       "statuspage_page.this",
+				ImportState:        true,
+				ImportStateId:      testPageID,
+				ImportStatePersist: true,
+				Config:             testAccStatuspagePageConfig(testPageID, originalName),
 			},
 			{
 				Config: testAccStatuspagePageConfig(testPageID, "tf-testacc-page-renamed"),
