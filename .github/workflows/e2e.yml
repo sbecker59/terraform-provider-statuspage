@@ -35,6 +35,7 @@ jobs:
           DD_API_KEY : ${{ secrets.DD_API_KEY }}
           DD_APP_KEY : ${{ secrets.DD_APP_KEY }}
           STATUSPAGE_PAGE_NAME : ${{ secrets.STATUSPAGE_PAGE_NAME }}
+          STATUSPAGE_TEST_PAGE_ID: ${{ secrets.STATUSPAGE_TEST_PAGE_ID }}
         run: |
           make cover
 
