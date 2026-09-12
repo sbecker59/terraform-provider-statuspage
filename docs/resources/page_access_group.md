@@ -66,3 +66,14 @@ resource "statuspage_page_access_group" "internal_team" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a page access group using the page ID and access group ID.
+terraform import statuspage_page_access_group.team your_page_id/your_page_access_group_id
+```

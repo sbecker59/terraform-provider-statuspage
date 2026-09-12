@@ -30,6 +30,7 @@ This provider lets you automate components, incidents, metrics, subscribers, and
 
 | Resource | Description |
 |---|---|
+| `statuspage_page` | Manage settings for an existing Statuspage page (pages cannot be created or deleted through the API) |
 | `statuspage_component` | Create and manage status components (API, website, database, …) |
 | `statuspage_component_group` | Group components into logical sections on your status page |
 | `statuspage_incident` | Declare realtime incidents and scheduled maintenance windows |
@@ -76,7 +77,23 @@ provider "statuspage" {
 }
 ```
 
-### 2 — Create a component
+### 2 — Manage an existing page
+
+Pages cannot be created or deleted through the Statuspage API. Import an existing page before managing its settings:
+
+```shell
+terraform import statuspage_page.my_page your_page_id
+```
+
+```hcl
+resource "statuspage_page" "my_page" {
+  page_id   = "your_page_id"
+  name      = "My Status Page"
+  time_zone = "UTC"
+}
+```
+
+### 3 — Create a component
 
 ```hcl
 resource "statuspage_component" "api" {
@@ -92,7 +109,7 @@ resource "statuspage_component" "api" {
 }
 ```
 
-### 3 — Declare an incident
+### 4 — Declare an incident
 
 ```hcl
 resource "statuspage_incident" "outage" {
@@ -110,7 +127,7 @@ resource "statuspage_incident" "outage" {
 }
 ```
 
-### 4 — Query existing data
+### 5 — Query existing data
 
 ```hcl
 data "statuspage_pages" "my_page" {

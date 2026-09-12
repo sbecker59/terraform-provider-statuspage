@@ -54,3 +54,14 @@ resource "statuspage_component_group" "my_group" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a component group using the page ID and component group ID.
+terraform import statuspage_component_group.core your_page_id/your_component_group_id
+```
