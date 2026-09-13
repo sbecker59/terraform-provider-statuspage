@@ -44,9 +44,9 @@ jobs:
       - name: Generate GitHub App token
         if: always()
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.CROSS_REPO_APP_ID }}
+          client-id: ${{ vars.CROSS_REPO_APP_ID }}
           private-key: ${{ secrets.CROSS_REPO_APP_PRIVATE_KEY }}
           owner: sbecker59
           repositories: statuspage-api-client-go
