@@ -19,7 +19,7 @@ func resourceComponentRead(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
-	component, _, err := statuspageClientV1.ComponentsApi.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	component, _, err := statuspageClientV1.ComponentsAPI.GetPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get component using Status Page API")
 	}
@@ -67,7 +67,7 @@ func resourceComponentCreate(d *schema.ResourceData, m interface{}) error {
 	o.SetComponent(component)
 
 	log.Printf("[INFO] Creating Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
+	result, _, err := statuspageClientV1.ComponentsAPI.PostPagesPageIdComponents(authV1, d.Get("page_id").(string)).PostPagesPageIdComponents(o).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create component using Status Page API")
 	}
@@ -105,7 +105,7 @@ func resourceComponentUpdate(d *schema.ResourceData, m interface{}) error {
 	o.SetComponent(component)
 
 	log.Printf("[INFO] Update Status Page componant '%s'", name)
-	result, _, err := statuspageClientV1.ComponentsApi.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
+	result, _, err := statuspageClientV1.ComponentsAPI.PatchPagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdComponents(o).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update component using Status Page API")
 	}
@@ -120,7 +120,7 @@ func resourceComponentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, err := statuspageClientV1.ComponentsApi.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, err := statuspageClientV1.ComponentsAPI.DeletePagesPageIdComponentsComponentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
 	}

@@ -9,13 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var (
-	paEmail = "example@example.com"
-)
-
 func TestAccStatuspagePageAccessUser_Basic(t *testing.T) {
 
 	rid := acctest.RandIntRange(1, 99)
+	paEmail := fmt.Sprintf("tf-testacc-page-access-user-%d@example.com", rid)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -23,14 +20,14 @@ func TestAccStatuspagePageAccessUser_Basic(t *testing.T) {
 		CheckDestroy: testAccCheckStatuspagePageAccessUserDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckPageAccessUserConfig(rid),
+				Config: testAccCheckPageAccessUserConfig(rid, paEmail),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("statuspage_page_access_user.default", "id"),
 					resource.TestCheckResourceAttr("statuspage_page_access_user.default", "email", paEmail),
 				),
 			},
 			{
-				Config: testAccCheckPageAccessUserConfigUpdated(rid),
+				Config: testAccCheckPageAccessUserConfigUpdated(rid, paEmail),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("statuspage_page_access_user.default", "id"),
 					resource.TestCheckResourceAttr("statuspage_page_access_user.default", "email", fmt.Sprintf("new_%s", paEmail)),
@@ -40,7 +37,7 @@ func TestAccStatuspagePageAccessUser_Basic(t *testing.T) {
 	})
 }
 
-func testAccCheckPageAccessUserConfig(rand int) string {
+func testAccCheckPageAccessUserConfig(rand int, email string) string {
 	return fmt.Sprintf(`
 	variable "component_name" {
 		default = "tf-testacc-page-access-user-%d"
@@ -55,10 +52,10 @@ func testAccCheckPageAccessUserConfig(rand int) string {
 		page_id     = "${var.pageid}"
 		email       = "${var.email}"
 	}
-	`, rand, audienceSpecificPageID, paEmail)
+	`, rand, audienceSpecificPageID, email)
 }
 
-func testAccCheckPageAccessUserConfigUpdated(rand int) string {
+func testAccCheckPageAccessUserConfigUpdated(rand int, email string) string {
 	return fmt.Sprintf(`
 	variable "component_name" {
 		default = "tf-testacc-page-access-user-%d"
@@ -73,7 +70,7 @@ func testAccCheckPageAccessUserConfigUpdated(rand int) string {
 		page_id     = "${var.pageid}"
 		email       = "new_${var.email}"
 	}
-	`, rand, audienceSpecificPageID, paEmail)
+	`, rand, audienceSpecificPageID, email)
 }
 
 func testAccCheckStatuspagePageAccessUserDestroy(s *terraform.State) error {
@@ -84,7 +81,7 @@ func testAccCheckStatuspagePageAccessUserDestroy(s *terraform.State) error {
 
 	for _, r := range s.RootModule().Resources {
 
-		_, httpresp, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsersPageAccessUserId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
+		_, httpresp, err := statuspageClientV1.PageAccessUsersAPI.GetPagesPageIdPageAccessUsersPageAccessUserId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
 		if err != nil {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue

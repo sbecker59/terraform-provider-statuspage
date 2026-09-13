@@ -114,7 +114,7 @@ func testAccCheckStatuspagePageAccessGroupDestroy(s *terraform.State) error {
 
 	for _, r := range s.RootModule().Resources {
 
-		_, httpresp, err := statuspageClientV1.PageAccessGroupsApi.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
+		_, httpresp, err := statuspageClientV1.PageAccessGroupsAPI.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, audienceSpecificPageID, r.Primary.ID).Execute()
 		if err != nil {
 			if httpresp != nil && httpresp.StatusCode == 404 {
 				continue

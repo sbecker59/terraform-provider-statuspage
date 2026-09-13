@@ -11,7 +11,7 @@ func resourceMetricProviderRead(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	metricProvider, _, err := statuspageClientV1.MetricProvidersApi.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	metricProvider, _, err := statuspageClientV1.MetricProvidersAPI.GetPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get metric provider using Status Page API")
@@ -55,7 +55,7 @@ func resourceMetricProviderCreate(d *schema.ResourceData, m interface{}) error {
 	o := *sp.NewPostPagesPageIdMetricsProviders()
 	o.SetMetricsProvider(metricProvider)
 
-	resp, _, err := statuspageClientV1.MetricProvidersApi.PostPagesPageIdMetricsProviders(authV1, d.Get("page_id").(string)).PostPagesPageIdMetricsProviders(o).Execute()
+	resp, _, err := statuspageClientV1.MetricProvidersAPI.PostPagesPageIdMetricsProviders(authV1, d.Get("page_id").(string)).PostPagesPageIdMetricsProviders(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create metric provider using Status Page API")
@@ -82,7 +82,7 @@ func resourceMetricProviderUpdate(d *schema.ResourceData, m interface{}) error {
 	o := *sp.NewPatchPagesPageIdMetricsProviders()
 	o.SetMetricsProvider(metricProvider)
 
-	resp, _, err := statuspageClientV1.MetricProvidersApi.PatchPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdMetricsProviders(o).Execute()
+	resp, _, err := statuspageClientV1.MetricProvidersAPI.PatchPagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdMetricsProviders(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create metric provider using Status Page API")
@@ -98,7 +98,7 @@ func resourceMetricProviderDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, _, err := statuspageClientV1.MetricProvidersApi.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, _, err := statuspageClientV1.MetricProvidersAPI.DeletePagesPageIdMetricsProvidersMetricsProviderId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete component using Status Page API")
