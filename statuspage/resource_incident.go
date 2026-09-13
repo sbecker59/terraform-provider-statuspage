@@ -19,7 +19,7 @@ func resourceIncidentRead(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page incident '%s'", name)
 
-	incident, _, err := statuspageClientV1.IncidentsApi.GetPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	incident, _, err := statuspageClientV1.IncidentsAPI.GetPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get incident using Status Page API")
 	}
@@ -39,7 +39,7 @@ func resourceIncidentRead(d *schema.ResourceData, m interface{}) error {
 
 	components := make([]interface{}, len(incident.GetComponents()))
 	for i, statuspage_component := range incident.GetComponents() {
-		component := make(map[string]interface{})
+		component := make(map[string]string)
 		component["id"] = statuspage_component.GetId()
 		component["name"] = statuspage_component.GetName()
 		component["status"] = statuspage_component.GetStatus()
@@ -68,7 +68,7 @@ func resourceIncidentCreate(d *schema.ResourceData, m interface{}) error {
 	terraformComponents := d.Get("component").(*schema.Set).List()
 
 	var component_ids []string
-	components := make(map[string]interface{})
+	components := make(map[string]string)
 
 	for _, terraformComponent := range terraformComponents {
 
@@ -99,7 +99,7 @@ func resourceIncidentCreate(d *schema.ResourceData, m interface{}) error {
 	o.SetIncident(component)
 
 	log.Printf("[INFO] Creating Status Page incident '%s'", name)
-	result, _, err := statuspageClientV1.IncidentsApi.PostPagesPageIdIncidents(authV1, d.Get("page_id").(string)).PostPagesPageIdIncidents(o).Execute()
+	result, _, err := statuspageClientV1.IncidentsAPI.PostPagesPageIdIncidents(authV1, d.Get("page_id").(string)).PostPagesPageIdIncidents(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create incident using Status Page API")
@@ -129,7 +129,7 @@ func resourceIncidentUpdate(d *schema.ResourceData, m interface{}) error {
 	terraformComponents := d.Get("component").(*schema.Set).List()
 
 	var component_ids []string
-	components := make(map[string]interface{})
+	components := make(map[string]string)
 
 	for _, terraformComponent := range terraformComponents {
 
@@ -160,7 +160,7 @@ func resourceIncidentUpdate(d *schema.ResourceData, m interface{}) error {
 	o.SetIncident(component)
 
 	log.Printf("[INFO] Update Status Page incident '%s'", name)
-	result, _, err := statuspageClientV1.IncidentsApi.PatchPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdIncidents(o).Execute()
+	result, _, err := statuspageClientV1.IncidentsAPI.PatchPagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdIncidents(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update incident using Status Page API")
@@ -176,7 +176,7 @@ func resourceIncidentDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, _, err := statuspageClientV1.IncidentsApi.DeletePagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, _, err := statuspageClientV1.IncidentsAPI.DeletePagesPageIdIncidentsIncidentId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete incident using Status Page API")

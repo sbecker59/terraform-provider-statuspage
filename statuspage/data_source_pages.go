@@ -29,7 +29,7 @@ func dataSourcePagesRead(d *schema.ResourceData, m interface{}) error {
 	authV1 := providerConf.AuthV1
 	page_name := d.Get("page_name").(string)
 
-	res, _, err := statuspageClientV1.PagesApi.GetPages(authV1).Execute()
+	res, _, err := statuspageClientV1.PagesAPI.GetPages(authV1).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "error querying pages list")

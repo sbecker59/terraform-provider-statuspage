@@ -17,7 +17,7 @@ func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
 	email := d.Get("email").(string)
 	log.Printf("[INFO] Looking up user by email '%s'", email)
 
-	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersApi.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
+	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersAPI.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get page access users using Status Page API")
@@ -56,7 +56,7 @@ func resourcePageAccessUserCreate(d *schema.ResourceData, m interface{}) error {
 	o.SetPageAccessUser(pageAccessUser)
 
 	log.Printf("[INFO] Creating Status Page access user '%s'", email)
-	resp, _, err := statuspageClientV1.PageAccessUsersApi.PostPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessUsers(o).Execute()
+	resp, _, err := statuspageClientV1.PageAccessUsersAPI.PostPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessUsers(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create page access user using Status Page API")
@@ -73,7 +73,7 @@ func resourcePageAccessUserDelete(d *schema.ResourceData, m interface{}) error {
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, err := statuspageClientV1.PageAccessUsersApi.DeletePagesPageIdPageAccessUsersPageAccessUserId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, err := statuspageClientV1.PageAccessUsersAPI.DeletePagesPageIdPageAccessUsersPageAccessUserId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete page access user using Status Page API")

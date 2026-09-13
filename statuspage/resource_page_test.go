@@ -149,7 +149,7 @@ func TestUnitSetPageState_MapsResponseNotConfig(t *testing.T) {
 	page.SetActivityScore(185)
 	page.SetSubdomain("prismacloud1")
 
-	setPageState(d, page)
+	setPageState(d, &page)
 
 	if got, want := d.Id(), "abc123def456"; got != want {
 		t.Errorf("Id() = %q, want %q", got, want)
@@ -386,7 +386,7 @@ func TestAccStatuspagePage_basic(t *testing.T) {
 				t.Fatalf("failed to configure provider for pre-test snapshot: %s", err)
 			}
 			pc := raw.(*ProviderConfiguration)
-			page, _, err := pc.StatuspageClientV1.PagesApi.GetPagesPageId(pc.AuthV1, testPageID).Execute()
+			page, _, err := pc.StatuspageClientV1.PagesAPI.GetPagesPageId(pc.AuthV1, testPageID).Execute()
 			if err != nil {
 				t.Fatalf("failed to snapshot original page state: %s", err)
 			}
@@ -395,7 +395,7 @@ func TestAccStatuspagePage_basic(t *testing.T) {
 			t.Cleanup(func() {
 				var restore sp.PatchPagesPage
 				restore.SetName(originalName)
-				if _, _, err := pc.StatuspageClientV1.PagesApi.PatchPagesPageId(pc.AuthV1, testPageID).
+				if _, _, err := pc.StatuspageClientV1.PagesAPI.PatchPagesPageId(pc.AuthV1, testPageID).
 					PatchPages(sp.PatchPages{Page: &restore}).Execute(); err != nil {
 					t.Errorf("failed to restore original page name %q: %s", originalName, err)
 				}
@@ -441,7 +441,7 @@ resource "statuspage_page" "this" {
 func testAccCheckStatuspagePageName(pageID, want string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		conn := testAccProvider.Meta().(*ProviderConfiguration)
-		page, _, err := conn.StatuspageClientV1.PagesApi.GetPagesPageId(conn.AuthV1, pageID).Execute()
+		page, _, err := conn.StatuspageClientV1.PagesAPI.GetPagesPageId(conn.AuthV1, pageID).Execute()
 		if err != nil {
 			return TranslateClientErrorDiag(err, "error retrieving page for verification")
 		}

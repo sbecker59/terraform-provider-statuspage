@@ -310,7 +310,7 @@ func resourcePageRead(d *schema.ResourceData, m interface{}) error {
 	pageID := d.Id()
 	log.Printf("[INFO] Reading Status Page page '%s'", pageID)
 
-	page, httpResp, err := statuspageClientV1.PagesApi.GetPagesPageId(authV1, pageID).Execute()
+	page, httpResp, err := statuspageClientV1.PagesAPI.GetPagesPageId(authV1, pageID).Execute()
 	if err != nil {
 		// A genuine 404 means the page is gone (or the ID was never valid):
 		// drop it from state so the next plan proposes re-import rather than an
@@ -343,7 +343,7 @@ func resourcePageUpdate(d *schema.ResourceData, m interface{}) error {
 	body := buildPagePatchBody(d, d.GetRawConfig())
 
 	log.Printf("[INFO] Updating Status Page page '%s'", pageID)
-	page, _, err := statuspageClientV1.PagesApi.PatchPagesPageId(authV1, pageID).
+	page, _, err := statuspageClientV1.PagesAPI.PatchPagesPageId(authV1, pageID).
 		PatchPages(sp.PatchPages{Page: &body}).Execute()
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update page using Status Page API")
@@ -462,7 +462,7 @@ func patchBool(page *sp.PatchPagesPage, raw cty.Value, d *schema.ResourceData, a
 // setPageState maps a Page API response into Terraform state. Read and
 // Update both funnel through this so state always reflects what the API
 // actually returned.
-func setPageState(d *schema.ResourceData, page sp.Page) {
+func setPageState(d *schema.ResourceData, page *sp.Page) {
 	d.SetId(page.GetId())
 	d.Set("page_id", page.GetId())
 

@@ -17,7 +17,7 @@ func resourcePageAccessGroupRead(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	log.Printf("[INFO] Reading Status Page component '%s'", name)
 
-	pageAccessGroups, _, err := statuspageClientV1.PageAccessGroupsApi.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	pageAccessGroups, _, err := statuspageClientV1.PageAccessGroupsAPI.GetPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get component groups using Status Page API")
@@ -58,7 +58,7 @@ func resourcePageAccessGroupCreate(d *schema.ResourceData, m interface{}) error 
 	o.SetPageAccessGroup(pageAccessGroup)
 
 	log.Printf("[INFO] Creating Status Page componant groups '%s'", name)
-	resp, _, err := statuspageClientV1.PageAccessGroupsApi.PostPagesPageIdPageAccessGroups(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessGroups(o).Execute()
+	resp, _, err := statuspageClientV1.PageAccessGroupsAPI.PostPagesPageIdPageAccessGroups(authV1, d.Get("page_id").(string)).PostPagesPageIdPageAccessGroups(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to create component groups using Status Page API")
@@ -91,7 +91,7 @@ func resourcePageAccessGroupUpdate(d *schema.ResourceData, m interface{}) error 
 	o.SetPageAccessGroup(pageAccessGroup)
 
 	log.Printf("[INFO] Update Status Page componant group '%s'", name)
-	resp, _, err := statuspageClientV1.PageAccessGroupsApi.PatchPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdPageAccessGroups(o).Execute()
+	resp, _, err := statuspageClientV1.PageAccessGroupsAPI.PatchPagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).PatchPagesPageIdPageAccessGroups(o).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to update component group using Status Page API")
@@ -107,7 +107,7 @@ func resourcePageAccessGroupDelete(d *schema.ResourceData, m interface{}) error 
 	statuspageClientV1 := providerConf.StatuspageClientV1
 	authV1 := providerConf.AuthV1
 
-	_, _, err := statuspageClientV1.PageAccessGroupsApi.DeletePagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
+	_, _, err := statuspageClientV1.PageAccessGroupsAPI.DeletePagesPageIdPageAccessGroupsPageAccessGroupId(authV1, d.Get("page_id").(string), d.Id()).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to delete page access group using Status Page API")
