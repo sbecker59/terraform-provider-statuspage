@@ -1,0 +1,66 @@
+name: Test client update
+
+on:
+  repository_dispatch:
+    types: [client-updated]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: 1.26.x
+
+      - name: Update client to candidate branch
+        run: |
+          go get "${{ github.event.client_payload.repository }}@${{ github.event.client_payload.branch }}"
+          go mod tidy
+
+      - name: Build
+        run: go build ./...
+
+      - name: Unit tests
+        run: make test
+
+      - name: Acceptance tests
+        env:
+          SP_API_KEY: ${{ secrets.SP_API_KEY }}
+          STATUSPAGE_PAGE_ID: ${{ secrets.STATUSPAGE_PAGE_ID }}
+          STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID: ${{ secrets.STATUSPAGE_AUDIENCE_SPECIFIC_PAGE_ID }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+          STATUSPAGE_PAGE_NAME: ${{ secrets.STATUSPAGE_PAGE_NAME }}
+          STATUSPAGE_TEST_PAGE_ID: ${{ secrets.STATUSPAGE_TEST_PAGE_ID }}
+        run: make testacc
+
+      - name: Generate GitHub App token
+        if: always()
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.CROSS_REPO_APP_ID }}
+          private-key: ${{ secrets.CROSS_REPO_APP_PRIVATE_KEY }}
+          owner: sbecker59
+          repositories: statuspage-api-client-go
+
+      - name: Report result to client repository PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            STATUS="✅ No regression detected"
+          else
+            STATUS="❌ Regression detected"
+          fi
+          gh pr comment "${{ github.event.client_payload.pr_number }}" \
+            --repo "${{ github.event.client_payload.repository }}" \
+            --body "$STATUS on [terraform-provider-statuspage](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) against branch \`${{ github.event.client_payload.branch }}\`."
