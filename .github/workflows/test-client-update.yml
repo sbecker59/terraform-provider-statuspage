@@ -19,9 +19,9 @@ jobs:
         with:
           go-version: 1.26.x
 
-      - name: Update client to candidate branch
+      - name: Update client to candidate commit
         run: |
-          go get "${{ github.event.client_payload.repository }}@${{ github.event.client_payload.branch }}"
+          go get "github.com/${{ github.event.client_payload.repository }}@${{ github.event.client_payload.sha }}"
           go mod tidy
 
       - name: Build
