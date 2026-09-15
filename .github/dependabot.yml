@@ -3,8 +3,9 @@
 version: 2
 registries:
   github-deps:
-    type: github-repository
-    repo: sbecker59/statuspage-api-client-go
+    type: git
+    url: https://github.com
+    username: x-access-token
     token: ${{ secrets.DEPENDABOT_PAT }}
     
 updates:
