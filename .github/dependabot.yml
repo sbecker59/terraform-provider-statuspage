@@ -1,6 +1,12 @@
 # Set update schedule for GitHub Actions
 
 version: 2
+registries:
+  github-deps:
+    type: github-repository
+    repo: sbecker59/statuspage-api-client-go
+    token: ${{ secrets.DEPENDABOT_PAT }}
+    
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -14,6 +20,8 @@ updates:
         dependency-type: "development"
   - package-ecosystem: "gomod"
     directory: "/"
+    registries:
+      - github-deps
     ignore:
       - dependency-name: "golang.org/x/tools"
       - dependency-name: "google.golang.org/grpc"
