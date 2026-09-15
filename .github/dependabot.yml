@@ -6,7 +6,7 @@ registries:
     type: git
     url: https://github.com
     username: x-access-token
-    token: ${{ secrets.DEPENDABOT_PAT }}
+    password: ${{ secrets.DEPENDABOT_PAT }}
     
 updates:
   - package-ecosystem: "github-actions"
