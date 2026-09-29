@@ -17,7 +17,7 @@ func resourcePageAccessUserRead(d *schema.ResourceData, m interface{}) error {
 	email := d.Get("email").(string)
 	log.Printf("[INFO] Looking up user by email '%s'", email)
 
-	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersAPI.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Page(1).PerPage(100).Execute()
+	pageAccessUsers, _, err := statuspageClientV1.PageAccessUsersAPI.GetPagesPageIdPageAccessUsers(authV1, d.Get("page_id").(string)).Email(email).Page(1).PerPage(100).Execute()
 
 	if err != nil {
 		return TranslateClientErrorDiag(err, "failed to get page access users using Status Page API")

@@ -2,12 +2,39 @@ package statuspage
 
 import (
 	"fmt"
+	"net/http"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
+
+func TestUnitResourcePageAccessUserRead_FiltersByEmail(t *testing.T) {
+	const email = "user@example.com"
+	client, authV1 := newTestPagesClient(t, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if r.URL.Query().Get("email") != email {
+			w.Write([]byte(`[]`))
+			return
+		}
+		w.Write([]byte(`[{"id":"user-id","email":"user@example.com"}]`))
+	})
+
+	d := schema.TestResourceDataRaw(t, resourcePageAccessUser().Schema, map[string]interface{}{
+		"page_id": "page-id",
+		"email":   email,
+	})
+	m := &ProviderConfiguration{StatuspageClientV1: client, AuthV1: authV1}
+
+	if err := resourcePageAccessUserRead(d, m); err != nil {
+		t.Fatalf("resourcePageAccessUserRead() error = %v, want nil", err)
+	}
+	if got, want := d.Id(), "user-id"; got != want {
+		t.Errorf("Id() = %q, want %q", got, want)
+	}
+}
 
 func TestAccStatuspagePageAccessUser_Basic(t *testing.T) {
 
